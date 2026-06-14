@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cockpit formateur — Formation IA Mutuelle de Poitiers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dark:#222b32; --panel:#2b353d; --panel2:#323d46;
+    --gold:#d4893a; --goldl:#e8aa5c; --cream:#f2ead8;
+    --muted:#9aa7af; --line:#3a454e; --red:#e0726a; --green:#8cc63f;
+    --disp:"Space Grotesk", system-ui, sans-serif;
+    --body:"Inter", system-ui, -apple-system, sans-serif;
+    --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--dark);color:var(--cream);font-family:var(--body);line-height:1.55;-webkit-font-smoothing:antialiased}
+
+  /* sticky bar */
+  .topbar{
+    position:sticky;top:0;z-index:30;background:rgba(26,33,39,.95);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);padding:10px 20px;display:flex;align-items:center;
+    justify-content:space-between;gap:16px;flex-wrap:wrap;
+  }
+  .topbar .who{font-family:var(--disp);font-weight:700;font-size:.92rem;color:var(--cream)}
+  .topbar .who span{color:var(--gold)}
+  .clocks{display:flex;align-items:center;gap:18px;font-family:var(--mono)}
+  .clock{font-size:1.1rem;font-weight:700;color:var(--cream)}
+  .clock small{display:block;font-size:.6rem;color:var(--muted);font-family:var(--body);letter-spacing:.1em;text-transform:uppercase}
+  #activeWrap{display:flex;align-items:center;gap:10px;padding:5px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+  #activeWrap.off{opacity:.5}
+  #activeName{font-family:var(--body);font-size:.78rem;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #activeTime{font-family:var(--mono);font-weight:700;font-size:1.05rem;color:var(--goldl)}
+  #activeTime.over{color:var(--red)}
+
+  header.hero{padding:34px 24px 14px;max-width:1000px;margin:0 auto}
+  .eyebrow{font-family:var(--disp);font-weight:600;letter-spacing:.18em;text-transform:uppercase;font-size:.7rem;color:var(--gold);margin:0 0 10px}
+  header.hero h1{font-family:var(--disp);font-weight:700;font-size:clamp(1.7rem,4vw,2.4rem);margin:0 0 8px;color:#fff;letter-spacing:-.01em}
+  .meta{color:var(--muted);font-size:.92rem;margin:0}
+  .meta b{color:var(--cream)}
+
+  /* section nav */
+  nav.tabbar{position:sticky;top:54px;z-index:20;background:var(--dark);border-bottom:1px solid var(--line);margin:0;padding:9px 24px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+  .tab{appearance:none;cursor:pointer;font-family:var(--disp);font-weight:600;font-size:.78rem;color:var(--muted);background:none;border:1px solid var(--line);padding:7px 13px;border-radius:20px;transition:.15s;white-space:nowrap}
+  .tab:hover{color:var(--cream);border-color:var(--gold)}
+  .tab[aria-selected="true"]{color:var(--dark);background:var(--gold);border-color:var(--gold)}
+  .tab:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+  main{max-width:1000px;margin:0 auto;padding:22px 24px 70px}
+  section.block{margin-top:20px;display:none}
+  section.block.active{display:block;animation:fadetab .25s ease}
+  @keyframes fadetab{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  h2.sec{font-family:var(--disp);font-weight:700;font-size:1.35rem;color:#fff;margin:0 0 4px;display:flex;align-items:baseline;gap:10px}
+  h2.sec .n{font-family:var(--mono);font-size:.9rem;color:var(--gold)}
+  .sec-rule{height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin:8px 0 18px;border-radius:2px}
+  .lead{color:var(--muted);margin:0 0 16px;font-size:.95rem}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0}
+  .card h3{font-family:var(--disp);font-weight:600;color:var(--goldl);font-size:1rem;margin:0 0 10px}
+
+  /* déroulé blocks */
+  .slot{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin:12px 0;overflow:hidden;transition:border-color .2s}
+  .slot.running{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+  .slot-head{display:flex;align-items:center;gap:14px;padding:14px 18px;flex-wrap:wrap}
+  .time{font-family:var(--mono);font-weight:700;color:var(--gold);font-size:1.05rem;min-width:62px}
+  .slot-title{font-family:var(--disp);font-weight:600;color:#fff;font-size:1.04rem;flex:1;min-width:180px}
+  .dur{font-family:var(--mono);font-size:.78rem;color:var(--muted);border:1px solid var(--line);padding:2px 8px;border-radius:20px}
+  .startbtn{appearance:none;cursor:pointer;font-family:var(--disp);font-weight:600;font-size:.8rem;color:var(--dark);background:var(--gold);border:none;padding:8px 15px;border-radius:9px;transition:.15s}
+  .startbtn:hover{background:var(--goldl)}
+  .startbtn:focus-visible{outline:2px solid var(--cream);outline-offset:2px}
+  .slot.running .startbtn{background:var(--panel2);color:var(--cream);border:1px solid var(--gold)}
+  .slot-count{font-family:var(--mono);font-weight:700;font-size:.95rem;color:var(--goldl);min-width:66px;text-align:right}
+  .slot-count.over{color:var(--red)}
+  .slot-body{padding:0 18px 16px;border-top:1px solid var(--line);margin-top:2px;padding-top:14px}
+  .slot-body .row{margin:0 0 7px;font-size:.92rem}
+  .slot-body .k{font-family:var(--disp);font-weight:600;color:var(--cream);font-size:.78rem;letter-spacing:.02em;text-transform:uppercase;margin-right:6px}
+  .anti{margin-top:8px;padding:9px 12px;background:rgba(212,137,58,.1);border-left:3px solid var(--gold);border-radius:6px;font-size:.9rem}
+  .anti b{color:var(--goldl)}
+  .pausebar{display:flex;align-items:center;gap:10px;justify-content:center;padding:9px;margin:12px 0;background:var(--panel2);border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-family:var(--mono);font-size:.85rem}
+
+  /* checklist */
+  .check{display:flex;align-items:flex-start;gap:11px;padding:9px 12px;border:1px solid var(--line);border-radius:9px;margin:7px 0;cursor:pointer;user-select:none;transition:.12s;background:var(--panel)}
+  .check:hover{border-color:var(--gold)}
+  .box{flex:0 0 auto;width:20px;height:20px;border:2px solid var(--gold);border-radius:5px;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:var(--dark);font-weight:700}
+  .check.done .box{background:var(--gold)}
+  .check.done .box::after{content:"\2713"}
+  .check.done .txt{color:var(--muted);text-decoration:line-through}
+  .txt{font-size:.93rem}
+
+  table{border-collapse:collapse;width:100%;margin:6px 0;font-size:.9rem}
+  th,td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{background:var(--panel2);color:var(--goldl);font-family:var(--disp);font-weight:600;font-size:.82rem}
+  td .s{color:var(--cream);font-weight:600}
+
+  .quote{margin:10px 0;padding:10px 16px;border-left:3px solid var(--goldl);background:var(--panel);border-radius:6px;font-style:italic;color:var(--cream)}
+  ul.clean{margin:6px 0 0;padding:0;list-style:none}
+  ul.clean li{position:relative;padding:5px 0 5px 20px;font-size:.92rem}
+  ul.clean li::before{content:"";position:absolute;left:0;top:12px;width:7px;height:7px;border-radius:50%;background:var(--gold)}
+  .muted{color:var(--muted)}
+
+  footer{max-width:1000px;margin:0 auto;padding:24px;border-top:1px solid var(--line);color:var(--muted);font-size:.84rem;text-align:center}
+  footer b{color:var(--cream)}
+
+  @media (max-width:620px){
+    .clocks{gap:10px}.clock{font-size:.95rem}#activeName{max-width:110px}
+  }
+  /* ---- minuteur v2 ---- */
+  .elapsed{font-family:var(--mono);font-weight:700;font-size:.98rem;color:var(--cream);min-width:56px;text-align:right}
+  .elapsed.over{color:var(--red)}
+  .delta{font-family:var(--mono);font-weight:700;font-size:.74rem;padding:2px 9px;border-radius:20px;white-space:nowrap}
+  .delta.avance{color:var(--green);border:1px solid rgba(140,198,63,.4)}
+  .delta.retard{color:var(--red);border:1px solid rgba(224,114,106,.4)}
+  .ctrls{display:flex;gap:6px}
+  .ctrl{appearance:none;cursor:pointer;font-family:var(--disp);font-weight:600;font-size:.78rem;color:var(--cream);background:var(--panel2);border:1px solid var(--line);padding:7px 12px;border-radius:8px;transition:.12s}
+  .ctrl:hover{border-color:var(--gold)}
+  .ctrl.go{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+  .ctrl.go:hover{background:var(--goldl)}
+  .ctrl.stop{border-color:var(--red);color:var(--red);background:none}
+  .ctrl.stop:hover{background:rgba(224,114,106,.12)}
+  .ctrl:focus-visible{outline:2px solid var(--cream);outline-offset:2px}
+  .slot.paused{border-color:var(--goldl)}
+  .slot.done{opacity:.74}
+  .slot.done .slot-title{color:var(--muted)}
+  #bilanWrap{display:flex;align-items:center;gap:8px;padding:5px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+  #bilanWrap.off{opacity:.5}
+  #bilanWrap.pos{border-color:rgba(140,198,63,.5)}
+  #bilanWrap.neg{border-color:rgba(224,114,106,.5)}
+  #bilanLabel{font-family:var(--body);font-size:.66rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+  #bilanTime{font-family:var(--mono);font-weight:700;font-size:1.05rem;color:var(--cream)}
+  #bilanWrap.pos #bilanTime{color:var(--green)}
+  #bilanWrap.neg #bilanTime{color:var(--red)}
+  .resetbtn{appearance:none;cursor:pointer;font-family:var(--disp);font-weight:600;font-size:.72rem;color:var(--muted);background:none;border:1px solid var(--line);padding:6px 10px;border-radius:8px;transition:.12s}
+  .resetbtn:hover{color:var(--cream);border-color:var(--gold)}
+  .bilanhint{margin:0}
+  .bilanhint:not(:empty){margin:0 0 14px;padding:11px 14px;border-radius:10px;border:1px solid var(--line);font-size:.92rem}
+  .bilanhint.pos{background:rgba(140,198,63,.08);border-color:rgba(140,198,63,.4)}
+  .bilanhint.warn{background:rgba(232,170,92,.08);border-color:rgba(232,170,92,.4)}
+  .bilanhint.neg{background:rgba(224,114,106,.1);border-color:rgba(224,114,106,.45)}
+
+  /* ---------- Barre filet ---------- */
+  .filetbar{max-width:1080px;margin:14px auto 0;padding:0 22px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between}
+  .filetbar .fb-hint{flex:1 1 320px;min-width:260px;font-size:.8rem;color:var(--muted);line-height:1.5}
+  .filetbar .fb-hint b{color:var(--cream)}
+  .filetbar code{font-family:var(--mono);font-size:.78rem;color:var(--goldl)}
+  .fb-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .fb-stamp{font-family:var(--mono);font-size:.72rem;color:var(--green);min-width:84px;text-align:right}
+  .fb-btn{appearance:none;cursor:pointer;font-family:var(--disp);font-weight:600;font-size:.76rem;color:var(--cream);background:var(--panel2);border:1px solid var(--line);padding:7px 12px;border-radius:9px;transition:.12s;white-space:nowrap;display:inline-block}
+  .fb-btn:hover{border-color:var(--gold);color:#fff}
+  .fb-btn.primary{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+  .fb-btn.primary:hover{background:var(--goldl)}
+  .fb-btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  /* ---------- Notes ---------- */
+  .notes-area{width:100%;min-height:150px;resize:vertical;font-family:var(--body);font-size:.92rem;line-height:1.6;color:var(--cream);background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .notes-area:focus{outline:none;border-color:var(--gold)}
+  .notes-area::placeholder{color:var(--muted)}
+  /* ---------- Cloud ---------- */
+  .cf-l{display:block;font-size:.74rem;color:var(--muted);margin:10px 0 4px;font-family:var(--disp);font-weight:600}
+  .cf-i{width:100%;font-family:var(--mono);font-size:.82rem;color:var(--cream);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+  .cf-i:focus{outline:none;border-color:var(--gold)}
+  .cf-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .cf-status{margin:12px 0 0;font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+  .cf-status.ok{color:var(--green)}
+  .cf-status.warn{color:var(--goldl)}
+  .cf-ul{margin:6px 0 0;padding-left:18px}
+  .cf-ul li{margin:6px 0;font-size:.9rem;color:var(--cream)}
+  /* ---------- Impression / PDF : bascule en clair ---------- */
+  @media print{
+    :root{--dark:#fff;--panel:#fff;--panel2:#f6f6f4;--cream:#1d242a;--muted:#566;--line:#d6d6d0}
+    body{background:#fff;color:#1d242a}
+    .topbar,.tabbar,.jump,.filetbar,.no-print,.ctrls,.ctrl,#resetAll{display:none!important}
+    .hero{background:none!important;padding:8px 0 4px}
+    .hero h1{color:#15212b}
+    .eyebrow,.meta{color:#566}
+    main{padding:0 6px}
+
+    .card,.slot{box-shadow:none!important;break-inside:avoid}
+    .notes-area{min-height:90px;color:#1d242a;background:#fafaf8}
+    table{break-inside:avoid}
+    a[href]{color:#15212b;text-decoration:none}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="who">Cockpit · <span>Mutuelle de Poitiers</span></div>
+  <div class="clocks">
+    <div class="clock" id="clock">--:--:--<small>Heure</small></div>
+    <div id="bilanWrap" class="off">
+      <span id="bilanLabel">Bilan</span>
+      <span id="bilanTime">±0</span>
+    </div>
+    <button id="resetAll" class="resetbtn">Réinit.</button>
+  </div>
+</div>
+
+<header class="hero">
+  <p class="eyebrow">Plan de vol formateur · 7 h</p>
+  <h1>Formation IA — Mutuelle de Poitiers</h1>
+  <p class="meta"><b>Saintes</b> · Groupe 1 — lundi 15 juin · Groupe 2 — jeudi 25 juin 2026 · groupe inter-agents, niveaux mixtes</p>
+</header>
+
+<nav class="tabbar no-print" role="tablist" aria-label="Sections du cockpit">
+  <button class="tab" role="tab" data-tab="materiel"   aria-controls="materiel"   aria-selected="false">Matériel</button>
+  <button class="tab" role="tab" data-tab="deroule"    aria-controls="deroule"    aria-selected="true">Déroulé</button>
+  <button class="tab" role="tab" data-tab="script"     aria-controls="script"     aria-selected="false">Script</button>
+  <button class="tab" role="tab" data-tab="antidotes"  aria-controls="antidotes"  aria-selected="false">Antidotes</button>
+  <button class="tab" role="tab" data-tab="retard"     aria-controls="retard"     aria-selected="false">Retard</button>
+  <button class="tab" role="tab" data-tab="commercial" aria-controls="commercial" aria-selected="false">Commercial</button>
+  <button class="tab" role="tab" data-tab="notes"      aria-controls="notes"      aria-selected="false">Notes</button>
+  <button class="tab" role="tab" data-tab="cloture"    aria-controls="cloture"    aria-selected="false">Clôture</button>
+  <button class="tab" role="tab" data-tab="cloud"      aria-controls="cloud"      aria-selected="false">☁ Cloud</button>
+</nav>
+
+<div class="filetbar no-print">
+  <span class="fb-hint"><b>Filet de secours.</b> Ce cockpit s'enregistre tout seul sur <b>ce</b> navigateur — chrono, bilan, cases et notes survivent à un rechargement ou une fermeture. Il ne suit pas d'un PC à l'autre : pour une trace qui dure, <b>Exporte</b> le <code>.json</code> et range-le dans ton Drive.</span>
+  <span class="fb-actions">
+    <span id="saveStamp" class="fb-stamp"></span>
+    <button class="fb-btn" type="button" id="btnExport">⤓ Exporter (JSON)</button>
+    <label class="fb-btn" for="importer">⤒ Importer</label>
+    <input type="file" id="importer" accept="application/json,.json" style="display:none">
+    <button class="fb-btn primary" type="button" id="btnPrint">🖶 Imprimer / PDF</button>
+  </span>
+</div>
+
+<main>
+
+  <!-- MATERIEL -->
+  <section class="block" id="materiel">
+    <h2 class="sec"><span class="n">01</span> La veille &amp; le matériel</h2>
+    <div class="sec-rule"></div>
+    <div id="check-materiel"></div>
+  </section>
+
+  <!-- DEROULE -->
+  <section class="block active" id="deroule">
+    <h2 class="sec"><span class="n">02</span> Déroulé timé</h2>
+    <div class="sec-rule"></div>
+    <p class="lead">Chrono qui part de zéro pour chaque bloc. <b>Démarrer</b> · <b>Pause</b> · <b>Stop</b> → au Stop, il te dit ton avance ou ton retard. Le <b>Bilan</b> en haut cumule sur la journée et te dit où ajuster.</p>
+    <div id="bilanHint" class="bilanhint"></div>
+    <div id="slots"></div>
+  </section>
+
+  <!-- SCRIPT -->
+  <section class="block" id="script">
+    <h2 class="sec"><span class="n">03</span> Script d'animation</h2>
+    <div class="sec-rule"></div>
+    <div class="card">
+      <h3>Les 4 registres</h3>
+      <table>
+        <thead><tr><th>Registre</th><th>Concrètement</th></tr></thead>
+        <tbody>
+          <tr><td class="s">Direct</td><td>Pas de fioriture. « On fait ça, on avance. » Consignes nettes.</td></tr>
+          <tr><td class="s">Rassurant</td><td>« C'est normal de ne pas savoir, c'est pour ça qu'on est là. » Jamais de jugement sur le niveau.</td></tr>
+          <tr><td class="s">Exigeant</td><td>On ne s'arrête pas sur un résultat moyen. On pousse jusqu'au livrable visible.</td></tr>
+          <tr><td class="s">Concret</td><td>Chaque notion = un exemple de leur métier. Jamais de théorie sans application.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Phrases clés</h3>
+      <p class="quote">Aujourd'hui, vous ne repartez pas avec des slides. Vous repartez avec des outils qui tournent.</p>
+      <p class="quote">Votre IA ne sait que ce que vous lui dites. Ce matin, on lui dit tout.</p>
+      <p class="quote">On avance ensemble. Les plus à l'aise aident ; les autres posent des questions — c'est leur job.</p>
+      <p class="quote">Si quelqu'un peut reconnaître le client, on masque. Toujours.</p>
+      <p class="quote">On ajuste, on ne panique pas. Je vous dis ce qu'on garde et ce qu'on reporte.</p>
+    </div>
+    <div class="card">
+      <h3>Ce qu'on ne fait jamais</h3>
+      <ul class="clean">
+        <li>Lire les slides mot à mot.</li>
+        <li>Laisser un apprenant bloqué plus de 3 minutes sans intervenir.</li>
+        <li>Demander « vous avez compris ? » — vérifier par la pratique.</li>
+        <li>Laisser une question hors-sujet dériver plus de 2 minutes.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ANTIDOTES -->
+  <section class="block" id="antidotes">
+    <h2 class="sec"><span class="n">04</span> Antidotes</h2>
+    <div class="sec-rule"></div>
+    <div class="card">
+      <h3>Selon le groupe &amp; la technique</h3>
+      <table>
+        <thead><tr><th>Situation</th><th>Réponse immédiate</th></tr></thead>
+        <tbody>
+          <tr><td class="s">Groupe lent</td><td>Passer à 2 IA (ChatGPT + Gemini), Claude en démo. Simplifier les prompts. Binômes plus tôt. Ne pas accélérer au détriment de la compréhension.</td></tr>
+          <tr><td class="s">Groupe rapide</td><td>2e challenge IA (comparer 3 versions). Avancer plus tôt sur les cas concrets. Libérer du temps pour les questions business.</td></tr>
+          <tr><td class="s">Wifi instable</td><td>Partage de connexion depuis le téléphone.</td></tr>
+          <tr><td class="s">Compte IA non créé</td><td>ChatGPT gratuit pour démarrer (2 min en direct).</td></tr>
+          <tr><td class="s">Interface IA changée</td><td>Montrer l'équivalent sur une autre IA, continuer.</td></tr>
+          <tr><td class="s">Projet qui ne s'enregistre pas</td><td>Revenir au prompt collé en direct ; l'outil enregistré se fera juste après.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Profils chronophages</h3>
+      <table>
+        <thead><tr><th>Profil</th><th>Réponse</th></tr></thead>
+        <tbody>
+          <tr><td class="s">Le bavard hors-sujet</td><td>« Super question, on en parle à la pause. » Avancer.</td></tr>
+          <tr><td class="s">Le bloqué « pas d'intérêt »</td><td>« Regardez le résultat d'abord, on discute après. » Faire faire.</td></tr>
+          <tr><td class="s">Le perfectionniste</td><td>« C'est bon pour avancer, vous affinerez chez vous. »</td></tr>
+          <tr><td class="s">Le testeur de limites</td><td>« Bonne idée, on note pour une prochaine fois. Aujourd'hui on fait ça. »</td></tr>
+          <tr><td class="s">Le demandeur d'attention</td><td>L'intégrer en partage d'écran : son énergie devient une ressource.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- RETARD -->
+  <section class="block" id="retard">
+    <h2 class="sec"><span class="n">05</span> Arbitrage retard — on coupe quoi</h2>
+    <div class="sec-rule"></div>
+    <div class="card">
+      <table>
+        <thead><tr><th>Retard</th><th>On allège</th><th>On ne coupe jamais</th></tr></thead>
+        <tbody>
+          <tr><td class="s">10–20 min</td><td>La 2e passe d'atelier (on garde la passe 1 sur devis fictifs).</td><td>Perso, assistant mail, règle d'or RGPD.</td></tr>
+          <tr><td class="s">20–40 min</td><td>Cas concrets réduits à 1 usage / personne ; comparateur en démo + 1 essai.</td><td>Un livrable visible par personne + RGPD.</td></tr>
+          <tr><td class="s">&gt; 40 min</td><td>Se concentrer sur 2 outils max (assistant mail + 1).</td><td>Chacun repart avec ≥ 1 outil qui tourne + RGPD (règle + vérificateur).</td></tr>
+        </tbody>
+      </table>
+      <p style="margin:12px 0 0"><b style="color:var(--goldl)">Règle :</b> annoncer la coupe clairement. « On reporte tel point, on garde l'essentiel : votre outil qui tourne. »</p>
+    </div>
+  </section>
+
+  <!-- COMMERCIAL -->
+  <section class="block" id="commercial">
+    <h2 class="sec"><span class="n">06</span> Pense-bête commercial</h2>
+    <div class="sec-rule"></div>
+    <p class="lead">Chaque formation est une porte. On écoute, on ne pitche pas pendant.</p>
+    <div class="card">
+      <h3>Carole = ambassadrice</h3>
+      <ul class="clean">
+        <li>Offerte sur le Groupe 1. À soigner : porte d'entrée sur le réseau.</li>
+        <li>Palier suivant : cockpit IA d'agence en charte Mutuelle, Carole pressentie pilote — à planter quand la confiance est établie, pas en dur le jour J.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Signaux à noter</h3>
+      <table>
+        <thead><tr><th>Ce qu'ils disent</th><th>L'opportunité</th></tr></thead>
+        <tbody>
+          <tr><td>« Je voudrais faire ça automatiquement »</td><td class="s">Outil métier / automatisation</td></tr>
+          <tr><td>« J'ai des collègues qui galèrent »</td><td class="s">Intra-entreprise / groupe</td></tr>
+          <tr><td>« On pourrait continuer avec vous ? »</td><td class="s">Suivi 1:1 ou forfait</td></tr>
+          <tr><td>« Vous faites ça pour d'autres métiers ? »</td><td class="s">Nouveau secteur</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Quand planter la graine · Ne jamais</h3>
+      <ul class="clean">
+        <li><b>Déjeuner</b> : écouter les douleurs, sans pitcher.</li>
+        <li><b>Fin de session</b> : 2 min, carte / LinkedIn.</li>
+        <li><b>Mail J+3</b> : remercier + suite possible, sans forcer.</li>
+      </ul>
+      <p class="muted" style="margin:10px 0 0">Ne jamais : pitcher pendant la formation · promettre du non testé · proposer un devis sans avoir écouté la douleur précise.</p>
+    </div>
+  </section>
+
+  <!-- NOTES -->
+  <section class="block" id="notes">
+    <h2 class="sec"><span class="n">—</span> Notes de session</h2>
+    <div class="sec-rule"></div>
+    <p class="lead">À chaud, pendant la journée : ce qui marche, qui décroche, les signaux commerciaux, les questions à reprendre. Sauvegardé tout seul.</p>
+    <textarea id="sessionNotes" class="notes-area" placeholder="Ex. — Alain : très à l'aise, candidat binôme fort.&#10;Florence : bloquée sur la perso ChatGPT, reprendre.&#10;Signal : l'agence X parle d'un besoin comp' équipe → planter la graine cockpit d'agence.&#10;À refaire : prévoir 5 min de plus sur le comparateur."></textarea>
+  </section>
+
+  <!-- CLOTURE -->
+  <section class="block" id="cloture">
+    <h2 class="sec"><span class="n">07</span> Clôture — checklist de fin</h2>
+    <div class="sec-rule"></div>
+    <div id="check-cloture"></div>
+  </section>
+
+  <!-- CLOUD -->
+  <section class="block" id="cloud">
+    <h2 class="sec"><span class="n">☁</span> Cloud — enregistrement live</h2>
+    <div class="sec-rule"></div>
+    <p class="lead">Branche le cockpit à ton Google Sheet : chaque sauvegarde part aussi dans le cloud (écriture immédiate + journal). Le local reste ton filet hors-ligne ; le cloud, c'est ta trace qui dure et te suit d'un PC à l'autre.</p>
+
+    <div class="card">
+      <h3>Connexion</h3>
+      <label class="cf-l" for="cloudUrl">URL du backend (Apps Script · se termine par /exec)</label>
+      <input id="cloudUrl" class="cf-i" type="url" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off">
+      <label class="cf-l" for="cloudToken">Jeton (le même que dans le script)</label>
+      <input id="cloudToken" class="cf-i" type="text" placeholder="CHANGE-MOI-mdp-2026" autocomplete="off">
+      <label class="cf-l" for="cloudSession">Nom de cette session (1 ligne par formation dans le Sheet)</label>
+      <input id="cloudSession" class="cf-i" type="text" placeholder="Groupe 1 — 15 juin 2026" autocomplete="off">
+      <div class="cf-actions">
+        <button class="fb-btn primary" type="button" id="cloudSave">Enregistrer la config</button>
+        <button class="fb-btn" type="button" id="cloudPushNow">⤴ Pousser maintenant</button>
+        <button class="fb-btn" type="button" id="cloudPull">⤵ Charger depuis le cloud</button>
+      </div>
+      <p id="cloudStatus" class="cf-status">Cloud : non configuré (le cockpit fonctionne en local).</p>
+    </div>
+
+    <div class="card">
+      <h3>Comment ça marche</h3>
+      <ul class="cf-ul">
+        <li><b>Auto-push</b> : dès que l'URL est renseignée, chaque sauvegarde locale est aussi envoyée au Sheet (anti-rafale : au plus une fois toutes les ~3 s).</li>
+        <li><b>Hors-ligne</b> : si le wifi tombe, le local continue ; le cloud rattrape à la sauvegarde suivante. Jamais bloquée.</li>
+        <li><b>Charger depuis le cloud</b> : récupère la dernière version de CETTE session (utile sur un autre PC). Ça remplace l'état à l'écran.</li>
+        <li><b>Rien ne se perd</b> : le Sheet garde un onglet « log » où chaque envoi est ajouté, jamais écrasé.</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <b>L'Rénov IA Studio</b> — « L'intelligence artificielle sans perdre la vôtre. » · Document interne, jour J
+</footer>
+
+<script>
+  // ---------- Données déroulé ----------
+  const SLOTS = [
+    {t:"9 h 00", dur:15, title:"Accueil & tour de table", pause:false,
+      objectif:"Poser le cadre humain, jauger les niveaux.",
+      anim:"Tour de table express (prénom, métier, une attente). Repérer doués / moins doués pour les binômes.",
+      livrable:"Vos binômes fort/faible en tête.",
+      anti:"Si ça s'éternise, une phrase par personne, on avance."},
+    {t:"9 h 15", dur:30, title:"Panorama des 4 IA & leurs usages — le cadre", pause:false,
+      objectif:"Les 4 grandes IA et leurs usages + le cadre « assistants internes, pas d'agents ».",
+      anim:"Présenter ChatGPT, Claude, Gemini, Mistral et leurs usages. Poser : aujourd'hui on construit des assistants internes.",
+      outil:"Onglets 01 & 06 du support.",
+      anti:"Ne pas survendre « l'IA magique ». Exemples de leur métier."},
+    {t:"9 h 45", dur:45, title:"Personnaliser vos IA — le Miroir", pause:false,
+      objectif:"Chacun repart avec ses IA personnalisées.",
+      anim:"Démo Miroir en partage d'écran (apprenant moyen). Chacun fait son profil, le colle dans l'IA qu'il paie.",
+      outil:"Onglet 02 (Porte A GPT / Porte B texte).",
+      livrable:"Profil collé dans au moins l'IA payée.",
+      anti:"Si lent : 2 IA (ChatGPT + Gemini), Claude en démo. Max 45 min."},
+    {t:"10 h 30", dur:15, title:"Pause", pause:true, anti:"À heure fixe, ne pas supprimer."},
+    {t:"10 h 45", dur:75, title:"Assistant mail — vos ateliers", pause:false,
+      objectif:"Un assistant mail qui tourne sur leurs cas.",
+      anim:"Démo prompt réponse. Atelier 1 (mail simple) → Atelier 2 (mail tendu). Contrôle qualité.",
+      outil:"Onglet 03 (prompts + méthode 5 lignes).",
+      livrable:"Une réponse rédigée à partir d'un vrai mail anonymisé.",
+      anti:"Garde-fou responsabilité : ne jamais conclure à une prise en charge. « À vérifier avant envoi »."},
+    {t:"12 h 00", dur:90, title:"Déjeuner", pause:true, anti:"Vraie coupure. Écouter les douleurs (commercial), ne pas pitcher."},
+    {t:"13 h 30", dur:90, title:"Comparateur & projet comparateur", pause:false,
+      objectif:"Un projet comparateur réutilisable + atelier sur leurs devis.",
+      anim:"Démo (devis fictifs) → « créez votre projet comparateur » (instructions enregistrées) → atelier 2 passes (fictifs puis leurs données anonymisées).",
+      outil:"Onglet 04.",
+      livrable:"Projet comparateur enregistré + 1 comparaison sur leur cas.",
+      anti:"Lancer « cherchez un devis dans vos mails ». Sans rien → devis fictifs (filet). « Vos résultats seront différents, c'est le but. »"},
+    {t:"15 h 00", dur:15, title:"Pause", pause:true, anti:"À heure fixe."},
+    {t:"15 h 15", dur:40, title:"RGPD & données sensibles", pause:false,
+      objectif:"Ancrer le réflexe anonymisation.",
+      anim:"Règle d'or + tableau colle/colle pas. Vérificateur RGPD en exercice (5 min).",
+      outil:"Onglet 05.",
+      livrable:"Ils savent quoi masquer + ont testé le vérificateur.",
+      anti:"Ne se sacrifie pas, mais 40 min suffisent. Si retard : garder règle d'or + vérificateur."},
+    {t:"15 h 55", dur:50, title:"Vos cas concrets — mise en pratique", pause:false,
+      objectif:"Chacun applique à SA vraie tâche, de bout en bout. Le moment le plus différenciant.",
+      anim:"Leur vraie tâche → bon outil/prompt → contrôle qualité → « prêt ». Je circule, j'appuie sur les binômes.",
+      livrable:"Un livrable à eux, prêt (mail / comparaison / synthèse).",
+      anti:"Personne bloqué plus de 3 minutes."},
+    {t:"16 h 45", dur:45, title:"Plan d'action & clôture", pause:false,
+      objectif:"Ancrer J+7 / J+30, évaluer à chaud.",
+      anim:"Onglet 07 (mes 3 usages, plan J+7/J+30). Tour de clôture + éval à chaud. 2 min commercial.",
+      outil:"Onglet 07.",
+      anti:"« Levez la main ceux qui ont un outil qui tourne. »"},
+  ];
+
+  const MATERIEL = [
+    "Ordinateur portable chargé + chargeur",
+    "Multiprise + rallonge (prises pour le groupe)",
+    "Partage de connexion 4G prêt (secours wifi)",
+    "Vidéoprojecteur / écran + HDMI + adaptateurs (USB-C, mini-DP)",
+    "Support apprenant (HTML) prêt à envoyer et projeter",
+    "Lien du GPT-MIROIR sous la main",
+    "Devis fictifs auto + habitation (dans le support, onglet 04)",
+    "Feuille d'émargement / présence",
+    "Cartes de visite",
+    "Adresse exacte de la salle confirmée",
+    "Eau / café confirmé avec Carole",
+    "Plan B : ChatGPT gratuit pour qui n'a pas de compte payant",
+  ];
+  const CLOTURE = [
+    "Chacun a au moins un outil qui tourne (main levée)",
+    "Profils IA enregistrés",
+    "Projet comparateur ou assistant mail enregistré",
+    "Évaluation à chaud récupérée",
+    "Émargement / présence signé",
+    "Cartes distribuées / contacts pris",
+    "Signaux commerciaux notés à chaud",
+  ];
+
+  // ---------- Rendu checklists ----------
+  function renderChecks(id, items){
+    const box = document.getElementById(id);
+    items.forEach(t=>{
+      const d=document.createElement('div'); d.className='check';
+      d.innerHTML='<span class="box"></span><span class="txt">'+t+'</span>';
+      d.addEventListener('click',()=>{ d.classList.toggle('done'); save(); });
+      box.appendChild(d);
+    });
+  }
+  renderChecks('check-materiel', MATERIEL);
+  renderChecks('check-cloture', CLOTURE);
+
+  // ---------- État ----------
+  const state = SLOTS.map(()=>({elapsed:0, status:'idle', startTs:null})); // status: idle|running|paused|done
+  function elapsedSec(i){
+    const st=state[i]; let e=st.elapsed;
+    if(st.status==='running' && st.startTs) e += (Date.now()-st.startTs)/1000;
+    return e;
+  }
+
+  // ---------- Rendu déroulé ----------
+  const slotsBox=document.getElementById('slots');
+  SLOTS.forEach((s,i)=>{
+    if(s.pause){
+      const p=document.createElement('div'); p.className='pausebar';
+      p.innerHTML='<span>'+s.t+' · '+s.title+' ('+s.dur+' min)</span>'+(s.anti?'<span style="color:var(--muted)">— '+s.anti+'</span>':'');
+      slotsBox.appendChild(p); return;
+    }
+    const el=document.createElement('div'); el.className='slot'; el.dataset.i=i;
+    let body='';
+    if(s.objectif) body+='<div class="row"><span class="k">Objectif</span>'+s.objectif+'</div>';
+    if(s.anim) body+='<div class="row"><span class="k">Ce que je fais</span>'+s.anim+'</div>';
+    if(s.outil) body+='<div class="row"><span class="k">Outil</span>'+s.outil+'</div>';
+    if(s.livrable) body+='<div class="row"><span class="k">Livrable</span>'+s.livrable+'</div>';
+    if(s.anti) body+='<div class="anti"><b>Antidote :</b> '+s.anti+'</div>';
+    el.innerHTML=
+      '<div class="slot-head">'+
+        '<span class="time">'+s.t+'</span>'+
+        '<span class="slot-title">'+s.title+'</span>'+
+        '<span class="dur">prévu '+s.dur+' min</span>'+
+        '<span class="elapsed" data-el="'+i+'">00:00</span>'+
+        '<span class="delta" data-delta="'+i+'"></span>'+
+        '<span class="ctrls" data-ctrls="'+i+'"></span>'+
+      '</div>'+
+      '<div class="slot-body">'+body+'</div>';
+    slotsBox.appendChild(el);
+    renderCtrls(i);
+  });
+
+  function renderCtrls(i){
+    const box=document.querySelector('[data-ctrls="'+i+'"]'); if(!box) return;
+    const st=state[i].status; let h='';
+    if(st==='idle')    h='<button class="ctrl go" data-act="start" data-i="'+i+'">Démarrer</button>';
+    else if(st==='running') h='<button class="ctrl" data-act="pause" data-i="'+i+'">Pause</button><button class="ctrl stop" data-act="stop" data-i="'+i+'">Stop</button>';
+    else if(st==='paused')  h='<button class="ctrl go" data-act="resume" data-i="'+i+'">Reprendre</button><button class="ctrl stop" data-act="stop" data-i="'+i+'">Stop</button>';
+    else if(st==='done')    h='<button class="ctrl" data-act="reset" data-i="'+i+'">↺ Refaire</button>';
+    box.innerHTML=h;
+  }
+  function markSlot(i){
+    const el=document.querySelector('.slot[data-i="'+i+'"]'); if(!el) return;
+    el.classList.toggle('running', state[i].status==='running');
+    el.classList.toggle('paused',  state[i].status==='paused');
+    el.classList.toggle('done',    state[i].status==='done');
+  }
+
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-act]'); if(!b) return;
+    const i=+b.dataset.i, act=b.dataset.act;
+    if(act==='start' || act==='resume'){
+      state.forEach((st,j)=>{ if(j!==i && st.status==='running'){ st.elapsed=elapsedSec(j); st.status='paused'; st.startTs=null; renderCtrls(j); markSlot(j);} });
+      state[i].status='running'; state[i].startTs=Date.now();
+    } else if(act==='pause'){
+      state[i].elapsed=elapsedSec(i); state[i].status='paused'; state[i].startTs=null;
+    } else if(act==='stop'){
+      state[i].elapsed=elapsedSec(i); state[i].status='done'; state[i].startTs=null;
+    } else if(act==='reset'){
+      state[i].elapsed=0; state[i].status='idle'; state[i].startTs=null;
+    }
+    renderCtrls(i); markSlot(i); recompute(); paint(); save();
+  });
+  document.getElementById('resetAll').addEventListener('click',()=>{
+    if(!confirm('Tout réinitialiser : chrono, bilan, cases et notes ?\nLa sauvegarde de ce navigateur sera effacée.')) return;
+    state.forEach((st,i)=>{ st.elapsed=0; st.status='idle'; st.startTs=null; renderCtrls(i); markSlot(i); });
+    document.querySelectorAll('.check.done').forEach(d=>d.classList.remove('done'));
+    const n=document.getElementById('sessionNotes'); if(n) n.value='';
+    try{localStorage.removeItem(SKEY);}catch(e){}
+    recompute(); paint();
+    const s=document.getElementById('saveStamp'); if(s) s.textContent='Réinitialisé';
+  });
+
+  function fmtSec(sec){
+    const a=Math.abs(Math.round(sec)), m=Math.floor(a/60), s=a%60;
+    return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  }
+  function signMin(sec){ // -> "+6 min" / "−4 min" / "à l'heure"
+    const m=Math.round(sec/60);
+    if(m===0) return 'à l\u2019heure';
+    return (m>0?'+':'\u2212')+Math.abs(m)+' min';
+  }
+
+  // ---------- Bilan ----------
+  let bilanSec=0;
+  function recompute(){
+    bilanSec=0;
+    state.forEach((st,i)=>{ if(st.status==='done') bilanSec += SLOTS[i].dur*60 - st.elapsed; });
+    const anyDone=state.some(s=>s.status==='done');
+    const w=document.getElementById('bilanWrap'), t=document.getElementById('bilanTime'), hint=document.getElementById('bilanHint');
+    w.classList.toggle('off',!anyDone);
+    w.classList.toggle('pos', anyDone && bilanSec>=0);
+    w.classList.toggle('neg', anyDone && bilanSec<0);
+    t.textContent = anyDone ? signMin(bilanSec) : '±0';
+    if(!anyDone){ hint.className='bilanhint'; hint.textContent=''; return; }
+    const retard=Math.round(-bilanSec/60);
+    let msg,cls;
+    if(bilanSec>=0){ msg='Tu as '+signMin(bilanSec)+' de marge — pousse un 2e challenge IA ou des questions business.'; cls='pos'; }
+    else if(retard<=10){ msg='Retard '+retard+' min — surveille, rien à couper pour l\u2019instant.'; cls='warn'; }
+    else if(retard<=20){ msg='Retard '+retard+' min → allège la 2e passe d\u2019atelier (garde la passe 1 sur devis fictifs).'; cls='warn'; }
+    else if(retard<=40){ msg='Retard '+retard+' min → réduis les cas concrets à 1 usage/personne ; comparateur en démo.'; cls='neg'; }
+    else { msg='Retard '+retard+' min → 2 outils max (assistant mail + 1) + RGPD essentiel. Chacun repart avec 1 outil qui tourne.'; cls='neg'; }
+    hint.className='bilanhint '+cls; hint.textContent=msg;
+  }
+
+  // ---------- Peinture (1×/s) ----------
+  function paint(){
+    state.forEach((st,i)=>{
+      const span=document.querySelector('[data-el="'+i+'"]'); if(!span) return;
+      const e=elapsedSec(i);
+      span.textContent=fmtSec(e);
+      span.classList.toggle('over', st.status!=='idle' && e > SLOTS[i].dur*60);
+      const d=document.querySelector('[data-delta="'+i+'"]');
+      if(st.status==='done'){
+        const dm=Math.round((SLOTS[i].dur*60 - st.elapsed)/60);
+        if(dm>0){ d.textContent=dm+' min d\u2019avance'; d.className='delta avance'; }
+        else if(dm<0){ d.textContent=Math.abs(dm)+' min de retard'; d.className='delta retard'; }
+        else { d.textContent='pile à l\u2019heure'; d.className='delta avance'; }
+      } else { d.textContent=''; d.className='delta'; }
+    });
+  }
+
+  // ---------- Horloge ----------
+  function clock(){
+    const d=new Date();
+    document.getElementById('clock').firstChild.textContent=
+      String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');
+    paint();
+  }
+  // ---------- Filet : persistance + export/import ----------
+  const QS=new URLSearchParams(location.search);
+  const SESSION_ID=QS.get('session')||'';
+  const SESSION_LABEL=QS.get('label')||'';
+  const SKEY='cockpit_formateur_mdp_v1'+(SESSION_ID?('_'+SESSION_ID):'');
+  function chkArr(id){ return Array.from(document.querySelectorAll('#'+id+' .check')).map(d=>d.classList.contains('done')); }
+  function applyChk(id,arr){ if(!Array.isArray(arr))return; const els=document.querySelectorAll('#'+id+' .check'); arr.forEach((v,i)=>{ if(els[i]) els[i].classList.toggle('done',!!v); }); }
+  function collect(){
+    return {
+      savedAt:new Date().toISOString(),
+      activeTab:activeTab,
+      state:state.map(s=>({elapsed:s.elapsed,status:s.status,startTs:s.startTs})),
+      materiel:chkArr('check-materiel'),
+      cloture:chkArr('check-cloture'),
+      notes:(document.getElementById('sessionNotes')||{}).value||''
+    };
+  }
+  function restore(d){
+    if(!d) return;
+    if(Array.isArray(d.state)){
+      d.state.forEach((s,i)=>{ if(!state[i])return;
+        state[i].elapsed=+s.elapsed||0; state[i].status=s.status||'idle'; state[i].startTs=s.startTs||null;
+        // garde-fou : bloc laissé "running" depuis plus de 3 h -> on le met en pause à l'ouverture
+        if(state[i].status==='running' && state[i].startTs && (Date.now()-state[i].startTs)>3*3600*1000){
+          state[i].elapsed=elapsedSec(i); state[i].status='paused'; state[i].startTs=null;
+        }
+      });
+    }
+    applyChk('check-materiel',d.materiel); applyChk('check-cloture',d.cloture);
+    const n=document.getElementById('sessionNotes'); if(n && typeof d.notes==='string') n.value=d.notes;
+    if(d.activeTab) showTab(d.activeTab);
+  }
+  function stamp(){ const s=document.getElementById('saveStamp'); if(!s)return; const d=new Date();
+    s.textContent='Enregistré ✓ '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
+  function save(){ try{ localStorage.setItem(SKEY,JSON.stringify({app:'cockpit_formateur_mdp',version:1,data:collect()})); stamp(); scheduleCloud(); }
+    catch(e){ const s=document.getElementById('saveStamp'); if(s) s.textContent='⚠ sauvegarde indispo — Exporte'; } }
+  function load(){ try{ const raw=localStorage.getItem(SKEY); if(raw){ const o=JSON.parse(raw); restore(o&&o.data?o.data:o); } }catch(e){} }
+  function repaintAll(){ state.forEach((st,i)=>{ renderCtrls(i); markSlot(i); }); recompute(); paint(); }
+
+  function download(name,content,type){ const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([content],{type:type})); a.download=name; a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1500); }
+  function exportJSON(){ save();
+    const payload={app:'cockpit_formateur_mdp',version:1,exportedAt:new Date().toISOString(),data:collect()};
+    download('cockpit_formateur_MutuelleDePoitiers.json',JSON.stringify(payload,null,2),'application/json'); }
+  function importJSON(ev){ const f=ev.target.files[0]; if(!f)return; const r=new FileReader();
+    r.onload=()=>{ try{ const p=JSON.parse(r.result); restore(p&&p.data?p.data:p); repaintAll(); save();
+        alert('Session importée : chrono, cases et notes restaurés.'); }
+      catch(e){ alert('Fichier illisible. Importe un .json exporté depuis ce cockpit.'); }
+      ev.target.value=''; };
+    r.readAsText(f); }
+
+  // câblage barre filet + notes
+  document.getElementById('btnExport').addEventListener('click',exportJSON);
+  document.getElementById('btnPrint').addEventListener('click',()=>window.print());
+  document.getElementById('importer').addEventListener('change',importJSON);
+  const notesEl=document.getElementById('sessionNotes');
+  if(notesEl) notesEl.addEventListener('input',save);
+
+  // ---------- Onglets ----------
+  let activeTab='deroule';
+  const tabBtns=Array.from(document.querySelectorAll('.tab[data-tab]'));
+  const panels=Array.from(document.querySelectorAll('section.block'));
+  function showTab(id){
+    if(!id || !document.getElementById(id)) id='deroule';
+    panels.forEach(p=>p.classList.toggle('active', p.id===id));
+    tabBtns.forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===id ? 'true':'false'));
+    activeTab=id;
+  }
+  tabBtns.forEach(b=>b.addEventListener('click',()=>{ showTab(b.dataset.tab); save(); }));
+
+  // ---------- Cloud (Apps Script + Google Sheet) ----------
+  const CFGKEY='cockpit_formateur_cloud_cfg';
+  let cloudCfg={url:'',token:'',session:''};
+  let cloudTimer=null;
+  function loadCfg(){ try{ const r=localStorage.getItem(CFGKEY); if(r) cloudCfg=Object.assign(cloudCfg,JSON.parse(r)); }catch(e){} }
+  function saveCfg(){ try{ localStorage.setItem(CFGKEY,JSON.stringify(cloudCfg)); }catch(e){} }
+  function cloudStatus(msg,kind){ const s=document.getElementById('cloudStatus'); if(!s)return; s.textContent=msg; s.className='cf-status'+(kind?' '+kind:''); }
+  function fillCfgFields(){ const u=document.getElementById('cloudUrl'),t=document.getElementById('cloudToken'),se=document.getElementById('cloudSession');
+    if(u)u.value=cloudCfg.url||''; if(t)t.value=cloudCfg.token||''; if(se)se.value=cloudCfg.session||''; }
+  function readCfgFields(){
+    cloudCfg.url=((document.getElementById('cloudUrl')||{}).value||'').trim();
+    cloudCfg.token=((document.getElementById('cloudToken')||{}).value||'').trim();
+    cloudCfg.session=((document.getElementById('cloudSession')||{}).value||'').trim()||('session-'+new Date().toISOString().slice(0,10));
+  }
+  function scheduleCloud(){ if(!cloudCfg.url) return; if(cloudTimer) clearTimeout(cloudTimer); cloudTimer=setTimeout(cloudPush,3000); }
+  function cloudPush(){
+    if(!cloudCfg.url) return;
+    if(typeof fetch!=='function'){ cloudStatus('Cloud : ce navigateur ne peut pas envoyer — utilise Exporter.','warn'); return; }
+    const payload={token:cloudCfg.token, session:cloudCfg.session||'default', savedAt:new Date().toISOString(), data:collect()};
+    cloudStatus('Cloud : envoi…');
+    fetch(cloudCfg.url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
+      .then(()=>{ const d=new Date(); cloudStatus('Cloud ✓ '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+' — session « '+(cloudCfg.session||'default')+' »','ok'); })
+      .catch(()=>{ cloudStatus('Cloud : hors-ligne — local OK, réessai à la prochaine sauvegarde.','warn'); });
+  }
+  function cloudPull(){
+    if(!cloudCfg.url){ cloudStatus('Renseigne d\u2019abord l\u2019URL du backend.','warn'); return; }
+    if(!confirm('Charger la dernière version cloud de la session « '+(cloudCfg.session||'default')+' » ?\nÇa remplace l\u2019état courant à l\u2019écran.')) return;
+    const cbName='__cockpitCloudCb_'+Date.now();
+    const tag=document.createElement('script');
+    let done=false;
+    function cleanup(){ try{ delete window[cbName]; }catch(e){ window[cbName]=undefined; } if(tag.parentNode) tag.parentNode.removeChild(tag); }
+    window[cbName]=function(resp){ done=true;
+      try{
+        if(resp && resp.ok && resp.data){ restore(resp.data); repaintAll(); save(); cloudStatus('Cloud : session restaurée ✓','ok'); }
+        else if(resp && resp.ok){ cloudStatus('Cloud : aucune sauvegarde pour cette session.','warn'); }
+        else { cloudStatus('Cloud : '+((resp&&resp.error)||'réponse invalide'),'warn'); }
+      }catch(e){ cloudStatus('Cloud : données illisibles.','warn'); }
+      cleanup();
+    };
+    tag.onerror=function(){ if(!done){ cloudStatus('Cloud : connexion impossible (vérifie l\u2019URL / le déploiement).','warn'); cleanup(); } };
+    tag.src=cloudCfg.url+'?action=get&session='+encodeURIComponent(cloudCfg.session||'default')+'&token='+encodeURIComponent(cloudCfg.token||'')+'&callback='+cbName+'&t='+Date.now();
+    document.head.appendChild(tag);
+    setTimeout(()=>{ if(!done){ cloudStatus('Cloud : pas de réponse (timeout).','warn'); cleanup(); } },12000);
+  }
+  loadCfg(); fillCfgFields();
+  if(cloudCfg.url) cloudStatus('Cloud : configuré — session « '+(cloudCfg.session||'default')+' ». Auto-push actif.','ok');
+  { const sv=document.getElementById('cloudSave'); if(sv) sv.addEventListener('click',()=>{ readCfgFields(); saveCfg(); fillCfgFields(); cloudStatus('Config enregistrée. Auto-push actif.','ok'); cloudPush(); });
+    const pn=document.getElementById('cloudPushNow'); if(pn) pn.addEventListener('click',()=>{ readCfgFields(); saveCfg(); cloudPush(); });
+    const pl=document.getElementById('cloudPull'); if(pl) pl.addEventListener('click',()=>{ readCfgFields(); saveCfg(); cloudPull(); }); }
+
+  // libellé de session + lien retour console (si ouvert depuis la console)
+  if(SESSION_LABEL){
+    const m=document.querySelector('.hero .meta'); if(m) m.innerHTML='<b>'+SESSION_LABEL+'</b> &nbsp;·&nbsp; '+m.innerHTML;
+    if(!cloudCfg.session){ cloudCfg.session=SESSION_LABEL; const se=document.getElementById('cloudSession'); if(se) se.value=SESSION_LABEL; }
+  }
+  if(SESSION_ID){
+    const who=document.querySelector('.topbar .who');
+    if(who){ const a=document.createElement('a'); a.href='index.html'; a.textContent='← Console';
+      a.style.cssText='margin-left:14px;font-size:.74rem;color:var(--gold);text-decoration:none;font-weight:600'; who.appendChild(a); }
+  }
+
+  // restauration au chargement
+  load(); repaintAll();
+
+  setInterval(clock,1000); clock(); recompute();
+</script>
+</body>
+</html>

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Console formations — L'Rénov IA Studio</title>
+<meta name="theme-color" content="#222b32">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Formations">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dark:#222b32; --panel:#2b353d; --panel2:#323d46;
+    --gold:#d4893a; --goldl:#e8aa5c; --cream:#f2ead8;
+    --muted:#9aa7af; --line:#3a454e; --red:#e0726a; --green:#8cc63f;
+    --disp:"Space Grotesk", system-ui, sans-serif;
+    --body:"Inter", system-ui, -apple-system, sans-serif;
+    --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--body);background:var(--dark);color:var(--cream);line-height:1.55;-webkit-font-smoothing:antialiased;cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='28'%20height='28'%20viewBox='0%200%2028%2028'%3E%3Cpath%20d='M23%203L25%205L11%2019L7%2021L9%2015Z'%20fill='%23e8aa5c'%20stroke='%23222b32'%20stroke-width='1.5'%20stroke-linejoin='round'/%3E%3Cpath%20d='M20%206L22%208'%20stroke='%23222b32'%20stroke-width='1.3'%20stroke-linecap='round'/%3E%3C/svg%3E") 7 21, auto}
+  a,button,.btn,.fcard,.mtab,.subtab,.tab,[data-go],label[for],summary{cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='28'%20height='28'%20viewBox='0%200%2028%2028'%3E%3Cpath%20d='M23%203L25%205L11%2019L7%2021L9%2015Z'%20fill='%23e8aa5c'%20stroke='%23222b32'%20stroke-width='1.5'%20stroke-linejoin='round'/%3E%3Cpath%20d='M20%206L22%208'%20stroke='%23222b32'%20stroke-width='1.3'%20stroke-linecap='round'/%3E%3C/svg%3E") 7 21, pointer}
+  input,textarea{cursor:text}
+  a{color:inherit}
+  .topbar{position:sticky;top:0;z-index:30;background:rgba(26,33,39,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);
+    padding:10px 22px;display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap}
+  .brand{font-family:var(--disp);font-weight:700;font-size:.95rem}
+  .brand span{color:var(--gold)}
+  .brand .nda{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-left:8px}
+  .tb-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .btn{appearance:none;cursor:pointer;font-family:var(--disp);font-weight:600;font-size:.76rem;color:var(--cream);background:var(--panel2);border:1px solid var(--line);padding:7px 12px;border-radius:9px;transition:.12s;white-space:nowrap;text-decoration:none;display:inline-block}
+  .btn:hover{border-color:var(--gold);color:#fff}
+  .btn.primary{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+  .btn.primary:hover{background:var(--goldl)}
+  .btn.ghost{background:none}
+  .btn.danger:hover{border-color:var(--red);color:var(--red)}
+  .btn.sm{font-size:.72rem;padding:5px 9px}
+  main{max-width:1080px;margin:0 auto;padding:22px 22px 60px}
+  .mainnav{position:sticky;top:50px;z-index:25;background:var(--dark);border-bottom:1px solid var(--line);display:flex;gap:6px;padding:8px 22px;justify-content:center}
+  .mtab{font-family:var(--disp);font-weight:600;font-size:.82rem;color:var(--muted);text-decoration:none;border:1px solid var(--line);padding:7px 16px;border-radius:20px}
+  .mtab:hover{color:var(--cream);border-color:var(--gold)}
+  .mtab.active{color:var(--dark);background:var(--gold);border-color:var(--gold)}
+  .home-hero{background:linear-gradient(150deg,var(--panel) 0%,var(--panel2) 100%);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:16px;padding:26px 26px 22px;margin:0 0 22px}
+  .hh-eyebrow{font-family:var(--disp);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.68rem;color:var(--gold);margin:0 0 8px}
+  .hh-title{font-family:var(--disp);font-weight:700;font-size:1.7rem;margin:0 0 4px}
+  .hh-sub{color:var(--muted);margin:0 0 18px;max-width:560px}
+  .home-hero .kpis{margin:0}
+  /* Bandeau marque */
+  .brand{display:flex;align-items:center;gap:9px}
+  .bicon{display:inline-flex}.bicon svg{display:block}
+  .btext span{color:var(--gold)}
+  /* Écran d'accueil (splash) */
+  .splash{max-width:680px;margin:14px auto;text-align:center;padding:34px 24px 28px;background:radial-gradient(125% 100% at 50% 0,var(--panel) 0,var(--dark) 72%);border:1px solid var(--line);border-radius:22px}
+  .splash-logo{display:flex;justify-content:center;margin:0 0 16px}
+  .splash-eyebrow{font-family:var(--disp);font-weight:700;letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--gold);margin:0 0 6px}
+  .splash-title{font-family:var(--disp);font-weight:700;font-size:2.1rem;margin:0 0 6px;color:#fff}
+  .splash-tag{font-style:italic;color:var(--muted);margin:0 0 24px}
+  .cd{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:16px;padding:20px;margin:0 auto 24px;max-width:430px}
+  .cd-eyebrow{font-family:var(--disp);font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:.66rem;color:var(--gold);margin:0 0 6px}
+  .cd-big{font-family:var(--disp);font-weight:700;font-size:2.5rem;color:var(--goldl);line-height:1}
+  .cd-sub{color:var(--cream);margin-top:8px;font-size:.92rem}
+  .cd-sub b{color:#fff}
+  .cd-date{color:var(--muted);font-size:.84rem}
+  .splash-cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 24px}
+  .btn.lg{font-size:.92rem;padding:12px 22px}
+  .splash-kpis{max-width:480px;margin:0 auto}
+  /* Agenda (administratif) */
+  .agenda{list-style:none;margin:0;padding:0}
+  .ag-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px dashed var(--line)}
+  .ag-row:last-child{border-bottom:none}
+  .ag-j{flex:0 0 auto;font-family:var(--disp);font-weight:700;font-size:.92rem;color:var(--dark);background:var(--goldl);border-radius:8px;padding:6px 11px;min-width:62px;text-align:center}
+  .ag-main{flex:1;font-size:.92rem}
+  .ag-main small{display:block;color:var(--muted);font-size:.78rem;text-transform:capitalize}
+  .cf-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .cf-status{margin:12px 0 0;font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+  .cf-status.ok{color:var(--green)}
+  .cf-status.warn{color:var(--goldl)}
+  .crumb{font-family:var(--mono);font-size:.76rem;color:var(--muted);margin:0 0 14px}
+  .crumb a{color:var(--gold);text-decoration:none}
+  h1{font-family:var(--disp);font-weight:700;font-size:1.5rem;margin:0 0 4px}
+  h2{font-family:var(--disp);font-weight:700;font-size:1.15rem;margin:24px 0 10px;color:#fff}
+  .sub{color:var(--muted);margin:0 0 18px}
+  /* KPIs */
+  .kpis{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 22px}
+  .kpi{flex:1 1 130px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+  .kpi .v{font-family:var(--disp);font-weight:700;font-size:1.4rem;color:#fff}
+  .kpi .v.gold{color:var(--goldl)}
+  .kpi .l{font-size:.74rem;color:var(--muted);margin-top:2px}
+  /* Cartes formation */
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+  .fcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;cursor:pointer;transition:.14s;border-left:3px solid var(--gold)}
+  .fcard:hover{border-color:var(--gold);transform:translateY(-2px)}
+  .fcard h3{font-family:var(--disp);font-weight:700;font-size:1.05rem;margin:0 0 3px}
+  .fcard .fin{display:inline-block;font-family:var(--mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.04em;color:var(--dark);background:var(--goldl);padding:2px 7px;border-radius:20px;margin-bottom:10px}
+  .fcard .meta{font-size:.82rem;color:var(--muted);margin:2px 0}
+  .fcard .meta b{color:var(--cream)}
+  /* Tableau sessions */
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:6px 0}
+  table{border-collapse:collapse;width:100%;min-width:680px}
+  th,td{text-align:left;padding:11px 13px;border-bottom:1px solid var(--line);font-size:.86rem;vertical-align:middle}
+  thead th{background:var(--panel2);font-family:var(--disp);font-weight:600;font-size:.76rem;color:var(--cream)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:rgba(255,255,255,.02)}
+  .statut{font-family:var(--mono);font-size:.72rem;padding:3px 8px;border-radius:20px;border:1px solid var(--line)}
+  .statut.avenir{color:var(--goldl);border-color:rgba(232,170,92,.4)}
+  .statut.faite{color:var(--green);border-color:rgba(140,198,63,.4)}
+  .statut.facturee{color:#7fc4ff;border-color:rgba(127,196,255,.4)}
+  .rowact{display:flex;gap:6px;flex-wrap:wrap}
+  /* Fiche / formulaire */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin:14px 0}
+  .card h3{font-family:var(--disp);font-weight:700;margin:0 0 12px;color:#fff}
+  .frow{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+  @media(max-width:620px){.frow{grid-template-columns:1fr}}
+  label.fl{display:block;font-size:.72rem;color:var(--muted);margin:0 0 4px;font-family:var(--disp);font-weight:600}
+  .fi{width:100%;font-family:var(--body);font-size:.9rem;color:var(--cream);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+  .fi:focus{outline:none;border-color:var(--gold)}
+  select.fi{font-family:var(--body)}
+  .ca-line{margin-top:14px;font-family:var(--disp);font-weight:700;font-size:1.1rem}
+  .ca-line span{color:var(--goldl)}
+  /* sous-onglets session */
+  .subtabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 4px}
+  .subtab{appearance:none;cursor:pointer;font-family:var(--disp);font-weight:600;font-size:.8rem;color:var(--muted);background:none;border:1px solid var(--line);padding:8px 15px;border-radius:20px}
+  .subtab[aria-selected="true"]{color:var(--dark);background:var(--gold);border-color:var(--gold)}
+  /* Documents Qualiopi */
+  .doclist{list-style:none;margin:0;padding:0}
+  .docrow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line)}
+  .docrow:last-child{border-bottom:none}
+  .docrow .dn{flex:1;font-size:.92rem}
+  .docrow .dn small{display:block;color:var(--muted);font-size:.76rem}
+  .docstat{font-family:var(--body);font-size:.82rem;color:var(--cream);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:6px 9px}
+  .empty{color:var(--muted);font-style:italic;padding:18px 0}
+  .hint{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:10px;padding:12px 15px;font-size:.85rem;color:var(--cream);margin:12px 0}
+  .hint b{color:var(--goldl)}
+  /* Participants & compta */
+  .tog{appearance:none;cursor:pointer;font-family:var(--disp);font-weight:600;font-size:.74rem;color:var(--muted);background:var(--panel2);border:1px solid var(--line);padding:6px 11px;border-radius:20px;white-space:nowrap}
+  .tog:hover{border-color:var(--gold)}
+  .tog.on{color:var(--dark);background:var(--green);border-color:var(--green)}
+  .tog.on.pay{background:var(--goldl);border-color:var(--goldl)}
+  .ptag{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.04em;color:var(--dark);background:var(--goldl);padding:2px 7px;border-radius:20px;vertical-align:middle}
+  .fi.mini{padding:7px 9px;font-size:.84rem;min-width:84px}
+  .liencell{display:flex;gap:6px;align-items:center}
+  footer{border-top:1px solid var(--line);text-align:center;padding:22px;color:var(--muted);font-size:.8rem}
+  input[type=file]{display:none}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="btext">L'Rénov <span>IA Studio</span> · Formations</span><span class="nda" id="ndaTag"></span></div>
+  <div class="tb-actions">
+    <button class="btn" id="btnExport">⤓ Exporter</button>
+    <label class="btn" for="importer">⤒ Importer</label>
+    <input type="file" id="importer" accept="application/json,.json">
+    <button class="btn ghost danger sm" id="btnReset">Réinit.</button>
+  </div>
+</div>
+
+<nav class="mainnav" id="mainnav">
+  <a class="mtab" data-nav="accueil" href="#/accueil">Accueil</a>
+  <a class="mtab" data-nav="formations" href="#/formations">Mes formations</a>
+  <a class="mtab" data-nav="admin" href="#/admin">Administratif</a>
+</nav>
+
+<main id="app"></main>
+
+<footer>L'Rénov IA Studio — « L'intelligence artificielle sans perdre la vôtre. » · Données enregistrées sur ce navigateur (Exporter pour sauvegarder).</footer>
+
+<script>
+// ============ Modèle de données ============
+const KEY='lrenov_console_v1';
+const DOCS_DEF=[
+  {k:'programme',  n:'Programme détaillé',                 d:'À fournir avant la formation'},
+  {k:'convention', n:'Convention de formation',            d:'Action de formation — art. L.6313-1'},
+  {k:'convocation',n:'Convocation / attestation d’inscription', d:'Avant la session'},
+  {k:'emargement', n:'Feuille d’émargement',               d:'Le jour J, par demi-journée'},
+  {k:'attestation',n:'Attestation de présence individuelle', d:'Après la session'},
+  {k:'evaluation', n:'Évaluation à chaud',                 d:'Fin de session'},
+  {k:'certificat', n:'Certificat de réalisation',          d:'Après la session'},
+];
+const STATUTS=['à venir','faite','facturée'];
+const FINANCEMENTS=['direct','CPF','OPCO','autre'];
+const DOCSTATUTS=['à faire','prêt','envoyé'];
+
+function seed(){
+  return {
+    studio:{nom:"L'Rénov IA Studio", nda:"75331795533", siret:"", adresse:"", contact:"contact@lrenov-ia.studio", prixDefaut:275},
+    formations:[
+      { id:'mdp', client:"Mutuelle de Poitiers Assurances", intitule:"Quelle IA pour quoi faire ?", financement:"direct", prix:275,
+        sessions:[
+          {id:'mdp-g1', label:"Groupe 1", date:"2026-06-15", lieu:"Saintes", inscrits:6, presents:0, statut:"à venir", docs:{}},
+          {id:'mdp-g2', label:"Groupe 2", date:"2026-06-25", lieu:"Saintes", inscrits:5, presents:0, statut:"à venir", docs:{}}
+        ]},
+      { id:'cpf', client:"CPF", intitule:"Formation IA (financement CPF)", financement:"CPF", prix:0,
+        sessions:[ {id:'cpf-s1', label:"Session à planifier", date:"", lieu:"", inscrits:2, presents:0, statut:"à venir", docs:{}} ]},
+      { id:'areas', client:"Aréas", intitule:"", financement:"direct", prix:0, sessions:[] }
+    ]
+  };
+}
+let DB=seed();
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(DB)); }catch(e){} scheduleCloud(); }
+function load(){ try{ const r=localStorage.getItem(KEY); if(r) DB=JSON.parse(r); }catch(e){} }
+
+// ============ Helpers ============
+const $=s=>document.querySelector(s);
+const uid=p=>p+'-'+Math.random().toString(36).slice(2,7);
+const esc=s=>(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num=v=>{const n=parseInt(v,10);return isNaN(n)?0:n;};
+function money(n){ return (n||0).toLocaleString('fr-FR')+' €'; }
+function prixSession(f,s){
+  const cand=[s.prix, f.prix, DB.studio.prixDefaut];
+  for(const v of cand){ if(v!==undefined && v!==null && v!=='') return num(v); }
+  return 0;
+}
+function caSession(f,s){ if(s.participants&&s.participants.length) return s.participants.reduce((t,p)=>t+num(p.montant),0); return prixSession(f,s)*num(s.inscrits); }
+function encaisseSession(f,s){ return (s.participants||[]).reduce((t,p)=>t+(p.paye?num(p.montant):0),0); }
+function encaisseFormation(f){ return f.sessions.reduce((t,s)=>t+encaisseSession(f,s),0); }
+function caFormation(f){ return f.sessions.reduce((t,s)=>t+caSession(f,s),0); }
+function elevesFormation(f){ return f.sessions.reduce((t,s)=>t+num(s.inscrits),0); }
+function syncAll(){ DB.formations.forEach(f=>f.sessions.forEach(s=>{ if(Array.isArray(s.participants)){ s.inscrits=s.participants.length; s.presents=s.participants.filter(p=>p.present).length; } })); }
+function mkP(nom,montant,facture,tag){ return {id:uid('p'),nom:nom,present:false,paye:false,montant:montant,facture:facture||'',lien:'',tag:tag||''}; }
+function rosterG1(){ return [mkP('Marion Moreau',275,'F-2026-05-24'),mkP('Laëtitia Fuzeau',275,'F-2026-05-19'),mkP('Florence Bouchet',275,'F-2026-05-22'),mkP('Déborah Praud',275,'F-2026-05-18')]; }
+function rosterG2(){ return [mkP('Elodie Brossard',275,'F-2026-05-25'),mkP('Rémi Lenglet',275,''),mkP('Alain Ayrault',275,'F-2026-05-17'),mkP('Emmanuelle Sarraf',275,''),mkP('Virginie Furet-Bouchaud',275,'F-2026-05-21'),mkP('Frantz Ardon',275,'F-2026-05-20'),mkP('Carole Aubre',0,'','offerte')]; }
+function migrate(){ let ch=false; const f=getF('mdp'); if(!f) return false;
+  const g1=getS(f,'mdp-g1'); if(g1&&!Array.isArray(g1.participants)){ g1.participants=rosterG1(); ch=true; }
+  const g2=getS(f,'mdp-g2'); if(g2&&!Array.isArray(g2.participants)){ g2.participants=rosterG2(); ch=true; }
+  return ch; }
+function getF(fid){ return DB.formations.find(f=>f.id===fid); }
+function getS(f,sid){ return f? f.sessions.find(s=>s.id===sid):null; }
+function statClass(st){ return st==='faite'?'faite':st==='facturée'?'facturee':'avenir'; }
+
+// ============ Routeur ============
+function route(){
+  const h=(location.hash||'#/accueil').replace(/^#/,'');
+  const p=h.split('/').filter(Boolean);
+  if(p[0]==='formations') renderFormations();
+  else if(p[0]==='formation' && p[1]) renderFormation(p[1]);
+  else if(p[0]==='session' && p[1] && p[2]) renderSession(p[1],p[2],p[3]||'infos');
+  else if(p[0]==='admin') renderAdmin();
+  else renderHome();
+  setNav();
+}
+function setNav(){
+  const h=location.hash||'#/accueil';
+  let act='accueil';
+  if(h.indexOf('/admin')>=0) act='admin';
+  else if(h.indexOf('/formation')>=0 || h.indexOf('/session')>=0) act='formations';
+  document.querySelectorAll('.mtab').forEach(a=>a.classList.toggle('active',a.dataset.nav===act));
+}
+window.addEventListener('hashchange',route);
+
+// ============ Vues ============
+function nextSession(){
+  const today=new Date(); today.setHours(0,0,0,0);
+  let best=null;
+  DB.formations.forEach(f=>f.sessions.forEach(s=>{ if(!s.date) return; const dt=new Date(s.date+'T00:00:00');
+    if(isNaN(dt.getTime())) return; if(dt>=today && (!best||dt<best.dt)) best={dt,f,s}; }));
+  return best;
+}
+function jLabel(days){ return days===0?'Aujourd’hui':days===1?'Demain':'J‑'+days; }
+function countdownHTML(){
+  const nx=nextSession();
+  if(!nx) return `<div class="cd"><div class="cd-big">—</div><div class="cd-sub">Aucune formation à venir pour l'instant.</div></div>`;
+  const today=new Date(); today.setHours(0,0,0,0);
+  const days=Math.round((nx.dt-today)/86400000);
+  const dstr=nx.dt.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  return `<div class="cd">
+    <div class="cd-eyebrow">Prochaine formation</div>
+    <div class="cd-big">${jLabel(days)}</div>
+    <div class="cd-sub"><b>${esc(nx.f.client)}</b> · ${esc(nx.s.label)}<br><span class="cd-date">${dstr}${nx.s.lieu?(' — '+esc(nx.s.lieu)):''}</span></div>
+  </div>`;
+}
+
+function agendaHTML(){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const up=[]; DB.formations.forEach(f=>f.sessions.forEach(s=>{ if(!s.date) return; const dt=new Date(s.date+'T00:00:00');
+    if(!isNaN(dt.getTime())&&dt>=today) up.push({dt,f,s}); }));
+  up.sort((a,b)=>a.dt-b.dt);
+  if(!up.length) return '<li class="empty">Aucune session à venir.</li>';
+  return up.map(({dt,f,s})=>{
+    const days=Math.round((dt-today)/86400000);
+    return `<li class="ag-row"><span class="ag-j">${jLabel(days)}</span>
+      <span class="ag-main"><b>${esc(f.client)}</b> · ${esc(s.label)}<small>${dt.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})}${s.lieu?(' — '+esc(s.lieu)):''}</small></span>
+      <a class="btn sm" href="#/session/${f.id}/${s.id}/animer">Ouvrir</a></li>`;
+  }).join('');
+}
+
+function renderHome(){
+  const fs=DB.formations;
+  const nbS=fs.reduce((t,f)=>t+f.sessions.length,0);
+  const nbE=fs.reduce((t,f)=>t+elevesFormation(f),0);
+  $('#app').innerHTML=`
+    <div class="splash">
+      <p class="splash-eyebrow">L'Rénov IA Studio</p>
+      <h1 class="splash-title">Mon espace formations</h1>
+      <p class="splash-tag">« L'intelligence artificielle sans perdre la vôtre. »</p>
+      ${countdownHTML()}
+      <div class="splash-cta">
+        <a class="btn primary lg" href="#/formations">Voir mes formations</a>
+        <a class="btn lg" href="#/admin">Espace administratif</a>
+      </div>
+      <div class="kpis splash-kpis">
+        <div class="kpi"><div class="v">${fs.length}</div><div class="l">Formations</div></div>
+        <div class="kpi"><div class="v">${nbS}</div><div class="l">Sessions</div></div>
+        <div class="kpi"><div class="v">${nbE}</div><div class="l">Élèves</div></div>
+      </div>
+    </div>`;
+}
+
+function renderFormations(){
+  const fs=DB.formations;
+  let cards=fs.map(f=>{
+    const next=f.sessions.map(s=>s.date).filter(Boolean).sort()[0]||'—';
+    return `<div class="fcard" data-go="#/formation/${f.id}">
+      <span class="fin">${esc(f.financement)}</span>
+      <h3>${esc(f.client)}</h3>
+      <div class="meta">${esc(f.intitule)||'<i>intitulé à compléter</i>'}</div>
+      <div class="meta"><b>${f.sessions.length}</b> session(s) · prochaine : <b>${esc(next)}</b></div>
+      <div class="meta"><b>${elevesFormation(f)}</b> élève(s)</div>
+    </div>`;
+  }).join('');
+  $('#app').innerHTML=`
+    <p class="crumb"><a href="#/accueil">Accueil</a> › Mes formations</p>
+    <h1>Mes formations</h1>
+    <p class="sub">Choisis une formation pour voir ses sessions et son détail.</p>
+    <div class="grid">${cards}</div>
+    <div style="margin-top:18px"><button class="btn primary" id="addF">+ Nouvelle formation</button></div>`;
+}
+
+function renderAdmin(){
+  const st=DB.studio;
+  const all=[]; DB.formations.forEach(f=>f.sessions.forEach(s=>all.push({f,s})));
+  const N=DOCS_DEF.length;
+  const sessRows=all.map(({f,s})=>{
+    const ready=DOCS_DEF.filter(d=>((s.docs&&s.docs[d.k])||'à faire')!=='à faire').length;
+    return `<tr><td>${esc(f.client)}</td><td>${esc(s.label)}</td><td>${esc(s.date)||'—'}</td>
+      <td>${ready}/${N} pièces</td><td><a class="btn sm" href="#/session/${f.id}/${s.id}/docs">Ouvrir</a></td></tr>`;
+  }).join('') || `<tr><td colspan="5" class="empty">Aucune session.</td></tr>`;
+  const modeles=[
+    ['Programme détaillé','par formation'],
+    ['Convention de formation','par session / agent'],
+    ['Convocation / attestation d’inscription','par agent, avant'],
+    ['Feuille d’émargement','par demi-journée'],
+    ['Attestation de présence individuelle','par agent, après'],
+    ['Évaluation à chaud','par session'],
+    ['Certificat de réalisation','par agent, après'],
+    ['CGV / Conditions','générique'],
+    ['Règlement intérieur','générique'],
+  ].map(m=>`<li class="docrow"><div class="dn">${esc(m[0])}<small>${esc(m[1])}</small></div><span class="docstat" style="opacity:.7">générateur à venir</span></li>`).join('');
+  $('#app').innerHTML=`
+    <div class="home-hero">
+      <p class="hh-eyebrow">Espace administratif</p>
+      <h1 class="hh-title">Mon planning &amp; mes documents</h1>
+      <p class="hh-sub">Ton agenda, ton identité déclarant et tes modèles Qualiopi au même endroit — pour ne pas alourdir les pages de suivi. Les générateurs de documents se branchent à l'étape suivante.</p>
+    </div>
+    <h2 style="margin-top:6px">Agenda — prochaines sessions</h2>
+    <div class="card"><ul class="agenda">${agendaHTML()}</ul></div>
+    <div class="card">
+      <h3>Identité déclarant</h3>
+      <div class="frow">
+        <div><label class="fl">Organisme</label><input class="fi" data-st="nom" value="${esc(st.nom)}"></div>
+        <div><label class="fl">NDA (n° de déclaration d'activité)</label><input class="fi" data-st="nda" value="${esc(st.nda)}"></div>
+        <div><label class="fl">SIRET</label><input class="fi" data-st="siret" value="${esc(st.siret||'')}"></div>
+        <div><label class="fl">Contact</label><input class="fi" data-st="contact" value="${esc(st.contact||'')}"></div>
+        <div style="grid-column:1/-1"><label class="fl">Adresse</label><input class="fi" data-st="adresse" value="${esc(st.adresse||'')}"></div>
+      </div>
+    </div>
+    <h2>Bibliothèque de modèles</h2>
+    <div class="card"><ul class="doclist">${modeles}</ul></div>
+    <h2>Suivi des pièces — toutes sessions</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Formation</th><th>Session</th><th>Date</th><th>Pièces prêtes</th><th></th></tr></thead>
+      <tbody>${sessRows}</tbody>
+    </table></div>
+    <h2>Sauvegarde en ligne</h2>
+    <div class="card">
+      <h3>Google Sheet — même backend que le cockpit</h3>
+      <p class="sub" style="margin:0 0 12px">La console pousse toute sa base dans ton Sheet, en plus du local. <b>Même URL et même jeton que ton cockpit</b> — rien à redéployer.</p>
+      <div class="frow">
+        <div style="grid-column:1/-1"><label class="fl">URL du backend (Apps Script · se termine par /exec)</label><input class="fi" id="cloudUrl" type="url" value="${esc(cloudCfg.url)}" placeholder="https://script.google.com/macros/s/.../exec"></div>
+        <div><label class="fl">Jeton</label><input class="fi" id="cloudToken" type="text" value="${esc(cloudCfg.token)}" placeholder="CHANGE-MOI-mdp-2026"></div>
+        <div><label class="fl">Nom de la sauvegarde</label><input class="fi" id="cloudName" type="text" value="${esc(cloudCfg.name)}" placeholder="console-lrenov"></div>
+      </div>
+      <div class="cf-actions">
+        <button class="btn primary" id="cloudSave">Enregistrer &amp; connecter</button>
+        <button class="btn" id="cloudPushNow">Pousser maintenant</button>
+        <button class="btn" id="cloudPull">Charger depuis le cloud</button>
+      </div>
+      <p id="cloudStatus" class="cf-status">${cloudCfg.url?('Connecté — sauvegarde « '+esc(cloudCfg.name)+' ». Envoi auto actif.'):'Non connecté (la console fonctionne en local).'}</p>
+    </div>`;
+}
+
+function renderFormation(fid){
+  const f=getF(fid); if(!f){ location.hash='#/accueil'; return; }
+  const rows=f.sessions.map(s=>`<tr>
+      <td><b>${esc(s.label)||'—'}</b></td>
+      <td>${esc(s.date)||'—'}</td>
+      <td>${esc(s.lieu)||'—'}</td>
+      <td>${num(s.inscrits)}${s.presents?(' / '+num(s.presents)+' prés.'):''}</td>
+      <td><span class="statut ${statClass(s.statut)}">${esc(s.statut)}</span></td>
+      <td>${money(caSession(f,s))}</td>
+      <td><div class="rowact">
+        <a class="btn sm primary" href="#/session/${f.id}/${s.id}">Ouvrir</a>
+        <button class="btn sm" data-dup="${s.id}">Dupliquer</button>
+        <button class="btn sm ghost danger" data-del="${s.id}">✕</button>
+      </div></td>
+    </tr>`).join('') || `<tr><td colspan="7" class="empty">Aucune session — ajoute-en une.</td></tr>`;
+  $('#app').innerHTML=`
+    <p class="crumb"><a href="#/accueil">Accueil</a> › ${esc(f.client)}</p>
+    <h1>${esc(f.client)}</h1>
+    <div class="card">
+      <h3>Identité de la formation</h3>
+      <div class="frow">
+        <div><label class="fl">Client / réseau</label><input class="fi" data-f="client" value="${esc(f.client)}"></div>
+        <div><label class="fl">Intitulé</label><input class="fi" data-f="intitule" value="${esc(f.intitule)}"></div>
+        <div><label class="fl">Financement</label>${selectHTML('f-fin',FINANCEMENTS,f.financement)}</div>
+        <div><label class="fl">Prix / participant (€)</label><input class="fi" type="number" data-f="prix" value="${num(f.prix)}"></div>
+      </div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="v">${f.sessions.length}</div><div class="l">Sessions</div></div>
+      <div class="kpi"><div class="v">${elevesFormation(f)}</div><div class="l">Élèves</div></div>
+      <div class="kpi"><div class="v gold">${money(caFormation(f))}</div><div class="l">CA formation</div></div>
+      <div class="kpi"><div class="v">${money(encaisseFormation(f))}</div><div class="l">Encaissé</div></div>
+    </div>
+    <h2>Sessions</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Session</th><th>Date</th><th>Lieu</th><th>Inscrits</th><th>Statut</th><th>CA</th><th>Actions</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn primary" id="addS">+ Nouvelle session</button>
+      ${f.sessions.length?'<button class="btn" id="dupLast">Dupliquer la dernière</button>':''}
+    </div>`;
+}
+
+function renderSession(fid,sid,tab){
+  const f=getF(fid); const s=getS(f,sid);
+  if(!s){ location.hash='#/formation/'+fid; return; }
+  const sub=(name,lbl)=>`<button class="subtab" data-sub="${name}" aria-selected="${tab===name?'true':'false'}">${lbl}</button>`;
+  let body='';
+  if(tab==='infos'){
+    body=`<div class="card">
+      <h3>Informations de session</h3>
+      <div class="frow">
+        <div><label class="fl">Libellé</label><input class="fi" data-s="label" value="${esc(s.label)}"></div>
+        <div><label class="fl">Date</label><input class="fi" type="date" data-s="date" value="${esc(s.date)}"></div>
+        <div><label class="fl">Lieu</label><input class="fi" data-s="lieu" value="${esc(s.lieu)}"></div>
+        <div><label class="fl">Statut</label>${selectHTML('s-stat',STATUTS,s.statut)}</div>
+        <div><label class="fl">Inscrits</label><input class="fi" type="number" data-s="inscrits" value="${num(s.inscrits)}"></div>
+        <div><label class="fl">Présents</label><input class="fi" type="number" data-s="presents" value="${num(s.presents)}"></div>
+        <div><label class="fl">Financement (si différent)</label>${selectHTML('s-fin',FINANCEMENTS,s.financement||f.financement)}</div>
+        <div><label class="fl">Prix / participant (si différent, €)</label><input class="fi" type="number" data-s="prix" value="${s.prix!=null&&s.prix!==''?num(s.prix):''}" placeholder="${num(f.prix||DB.studio.prixDefaut)}"></div>
+      </div>
+      <div class="ca-line">CA de la session : <span>${money(caSession(f,s))}</span></div>
+    </div>`;
+  } else if(tab==='compta'){
+    const ps=s.participants||[];
+    const others=f.sessions.filter(x=>x.id!==s.id);
+    const caPrev=ps.reduce((t,p)=>t+num(p.montant),0);
+    const enc=ps.reduce((t,p)=>t+(p.paye?num(p.montant):0),0);
+    const nPres=ps.filter(p=>p.present).length;
+    const nPay=ps.filter(p=>p.paye).length;
+    const rows=ps.map(p=>{
+      const mv=others.map(o=>`<button class="btn sm" data-pmv="${p.id}" data-pmvto="${o.id}">→ ${esc(o.label)}</button>`).join('');
+      const open=p.lien?`<a class="btn sm" href="${esc(p.lien)}" target="_blank" rel="noopener">Ouvrir</a>`:'';
+      return `<tr>
+        <td><b>${esc(p.nom)}</b>${p.tag?` <span class="ptag">${esc(p.tag)}</span>`:''}</td>
+        <td><button class="tog ${p.present?'on':''}" data-ptoggle="present" data-pid="${p.id}">${p.present?'Présent':'—'}</button></td>
+        <td><button class="tog pay ${p.paye?'on':''}" data-ptoggle="paye" data-pid="${p.id}">${p.paye?'Payé':'À régler'}</button></td>
+        <td><input class="fi mini" type="number" data-p="montant" data-pid="${p.id}" value="${num(p.montant)}"></td>
+        <td><input class="fi mini" type="text" data-p="facture" data-pid="${p.id}" value="${esc(p.facture||'')}" placeholder="—"></td>
+        <td><div class="liencell"><input class="fi mini" type="url" data-p="lien" data-pid="${p.id}" value="${esc(p.lien||'')}" placeholder="lien Drive…">${open}</div></td>
+        <td><div class="rowact">${mv}<button class="btn sm ghost danger" data-pdel="${p.id}" title="Retirer">✕</button></div></td>
+      </tr>`;
+    }).join('') || `<tr><td colspan="7" class="empty">Aucun participant — ajoute-les avec le bouton ci-dessous.</td></tr>`;
+    body=`
+      <div class="hint"><b>Participants &amp; compta — ${esc(s.label)}.</b> Tape pour marquer <b>présent</b> / <b>payé</b>. Montant, n° de facture et lien Drive éditables. Pas de raccord Pennylane : ce sont tes données. Le <b>CA</b> = somme des montants ; « offerte » = 0 €. « Déplacer » bascule la personne vers l'autre groupe.</div>
+      <div class="kpis">
+        <div class="kpi"><div class="v">${nPres}/${ps.length}</div><div class="l">Présents</div></div>
+        <div class="kpi"><div class="v">${nPay}/${ps.length}</div><div class="l">Payés</div></div>
+        <div class="kpi"><div class="v gold">${money(caPrev)}</div><div class="l">CA prévu</div></div>
+        <div class="kpi"><div class="v">${money(enc)}</div><div class="l">Encaissé</div></div>
+      </div>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Nom</th><th>Présent</th><th>Payé</th><th>Montant</th><th>N° facture</th><th>Facture (lien Drive)</th><th>Actions</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+      <div style="margin-top:14px"><button class="btn primary" data-padd>+ Ajouter un participant</button></div>`;
+  } else if(tab==='docs'){
+    const items=DOCS_DEF.map(dd=>{
+      const st=(s.docs&&s.docs[dd.k])||'à faire';
+      return `<li class="docrow">
+        <div class="dn">${esc(dd.n)}<small>${esc(dd.d)}</small></div>
+        ${selectHTML('doc-'+dd.k,DOCSTATUTS,st)}
+      </li>`;
+    }).join('');
+    body=`<div class="hint"><b>Conformité Qualiopi / déclaration.</b> NDA L'Rénov : <b>${esc(DB.studio.nda)}</b>. Coche l'avancement de chaque pièce. Les générateurs (programme, convention, émargement, attestations préremplis) arrivent à l'étape suivante.</div>
+      <div class="card"><h3>Pièces de la session</h3><ul class="doclist">${items}</ul></div>`;
+  } else { // animer
+    const label=encodeURIComponent(esc(f.client)+' — '+esc(s.label));
+    const url='cockpit_formateur_IA_MutuelleDePoitiers.html?session='+encodeURIComponent(s.id)+'&label='+label;
+    body=`<div class="card">
+      <h3>Animer la session — jour J</h3>
+      <p class="sub" style="margin:0 0 14px">Ouvre ton cockpit (chrono, déroulé, antidotes, notes, checklists). Il s'enregistre tout seul, scopé à <b>cette</b> session.</p>
+      <a class="btn primary" href="${url}" style="font-size:.95rem;padding:13px 22px">Ouvrir le cockpit</a>
+      <p class="sub" style="margin:14px 0 0;font-size:.8rem">Astuce : pour le jour J, ouvre-le en plein écran. Le cockpit autonome reste ton fallback.</p>
+    </div>`;
+  }
+  $('#app').innerHTML=`
+    <p class="crumb"><a href="#/accueil">Accueil</a> › <a href="#/formation/${f.id}">${esc(f.client)}</a> › ${esc(s.label)}</p>
+    <h1>${esc(s.label)} <span style="color:var(--muted);font-size:1rem;font-weight:500">· ${esc(f.client)}</span></h1>
+    <div class="subtabs">${sub('infos','Infos')}${sub('compta','Participants & Compta')}${sub('docs','Documents Qualiopi')}${sub('animer','Animer')}</div>
+    ${body}`;
+}
+
+function selectHTML(id,opts,val){
+  return `<select class="fi" id="${id}" data-sel="${id}">`+opts.map(o=>`<option ${o===val?'selected':''}>${esc(o)}</option>`).join('')+`</select>`;
+}
+
+// ============ Interactions (délégation) ============
+function curIds(){ const p=(location.hash||'').replace(/^#\//,'').split('/'); return {fid:p[1],sid:p[2]}; }
+
+document.addEventListener('click',e=>{
+  if(e.target.id==='cloudSave'){ readCloudFields(); saveCfg(); cloudStatus('Connecté. Envoi auto actif.','ok'); cloudPush(); return; }
+  if(e.target.id==='cloudPushNow'){ readCloudFields(); saveCfg(); cloudPush(); return; }
+  if(e.target.id==='cloudPull'){ readCloudFields(); saveCfg(); cloudPull(); return; }
+  const go=e.target.closest('[data-go]'); if(go){ location.hash=go.dataset.go; return; }
+  if(e.target.id==='addF'){
+    const name=prompt('Nom du client / réseau ?'); if(!name) return;
+    DB.formations.push({id:uid('f'),client:name,intitule:'',financement:'direct',prix:DB.studio.prixDefaut,sessions:[]}); save(); route(); return;
+  }
+  if(e.target.id==='addS'){ const {fid}=curIds(); const f=getF(fid);
+    f.sessions.push({id:uid('s'),label:'Nouvelle session',date:'',lieu:'',inscrits:0,presents:0,statut:'à venir',docs:{}}); save(); route(); return; }
+  if(e.target.id==='dupLast'){ const {fid}=curIds(); const f=getF(fid); const last=f.sessions[f.sessions.length-1];
+    if(last){ const c=JSON.parse(JSON.stringify(last)); c.id=uid('s'); c.label=(last.label||'Session')+' (copie)'; c.statut='à venir'; c.presents=0; f.sessions.push(c); save(); route(); } return; }
+  const dup=e.target.closest('[data-dup]'); if(dup){ const {fid}=curIds(); const f=getF(fid); const o=getS(f,dup.dataset.dup);
+    const c=JSON.parse(JSON.stringify(o)); c.id=uid('s'); c.label=(o.label||'Session')+' (copie)'; c.statut='à venir'; c.presents=0; f.sessions.push(c); save(); route(); return; }
+  const del=e.target.closest('[data-del]'); if(del){ const {fid}=curIds(); const f=getF(fid);
+    if(confirm('Supprimer cette session ?')){ f.sessions=f.sessions.filter(s=>s.id!==del.dataset.del); save(); route(); } return; }
+  const ptg=e.target.closest('[data-ptoggle]'); if(ptg){ const {fid,sid}=curIds(); const f=getF(fid); const s=getS(f,sid);
+    const p=s&&s.participants&&s.participants.find(x=>x.id===ptg.dataset.pid);
+    if(p){ const k=ptg.dataset.ptoggle; p[k]=!p[k]; syncAll(); save(); route(); } return; }
+  const padd=e.target.closest('[data-padd]'); if(padd){ const {fid,sid}=curIds(); const f=getF(fid); const s=getS(f,sid);
+    if(s){ const nom=prompt('Nom du participant ?'); if(nom){ s.participants=s.participants||[];
+      s.participants.push({id:uid('p'),nom:nom,present:false,paye:false,montant:num(f.prix||DB.studio.prixDefaut),facture:'',lien:'',tag:''}); syncAll(); save(); route(); } } return; }
+  const pmv=e.target.closest('[data-pmv]'); if(pmv){ const {fid,sid}=curIds(); const f=getF(fid); const s=getS(f,sid); const to=getS(f,pmv.dataset.pmvto);
+    if(s&&to&&s.participants){ const i=s.participants.findIndex(x=>x.id===pmv.dataset.pmv);
+      if(i>=0){ const moved=s.participants.splice(i,1)[0]; to.participants=to.participants||[]; to.participants.push(moved); syncAll(); save(); route(); } } return; }
+  const pdel=e.target.closest('[data-pdel]'); if(pdel){ const {fid,sid}=curIds(); const f=getF(fid); const s=getS(f,sid);
+    if(s&&s.participants){ const p=s.participants.find(x=>x.id===pdel.dataset.pdel);
+      if(p&&confirm('Retirer '+((p&&p.nom)||'ce participant')+' de la liste ?')){ s.participants=s.participants.filter(x=>x.id!==pdel.dataset.pdel); syncAll(); save(); route(); } } return; }
+  const sub=e.target.closest('[data-sub]'); if(sub){ const {fid,sid}=curIds(); location.hash='#/session/'+fid+'/'+sid+'/'+sub.dataset.sub; return; }
+});
+
+// changements de champs (blur/change : pas de perte de focus)
+document.addEventListener('change',e=>{
+  const t=e.target; const {fid,sid}=curIds(); const f=getF(fid);
+  if(t.dataset.st){ DB.studio[t.dataset.st]=t.value; save(); if(t.dataset.st==='nda') $('#ndaTag').textContent='NDA '+(DB.studio.nda||''); return; }
+  if(t.dataset.f && f){ f[t.dataset.f]=t.type==='number'?num(t.value):t.value; save(); if(t.dataset.f==='client'||t.dataset.f==='prix'){} return; }
+  if(t.dataset.p && f){ const s=getS(f,sid); if(s&&s.participants){ const p=s.participants.find(x=>x.id===t.dataset.pid);
+    if(p){ p[t.dataset.p]= t.type==='number'?num(t.value):t.value; syncAll(); save(); route(); } } return; }
+  if(t.dataset.s && f){ const s=getS(f,sid); if(s){ s[t.dataset.s]=t.type==='number'?num(t.value):t.value; save(); if(t.dataset.s==='inscrits'||t.dataset.s==='prix'){ route(); } } return; }
+  if(t.dataset.sel && f){
+    const id=t.dataset.sel, v=t.value;
+    if(id==='f-fin'){ f.financement=v; save(); }
+    else if(id==='s-stat'){ const s=getS(f,sid); if(s){s.statut=v; save();} }
+    else if(id==='s-fin'){ const s=getS(f,sid); if(s){s.financement=v; save();} }
+    else if(id.startsWith('doc-')){ const s=getS(f,sid); if(s){ s.docs=s.docs||{}; s.docs[id.slice(4)]=v; save(); } }
+    return;
+  }
+});
+
+// Export / Import / Reset
+$('#btnExport').addEventListener('click',()=>{
+  const blob=new Blob([JSON.stringify({app:'lrenov_console',version:1,exportedAt:new Date().toISOString(),data:DB},null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='formations_sauvegarde.json'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+});
+$('#importer').addEventListener('change',ev=>{
+  const fl=ev.target.files[0]; if(!fl) return; const r=new FileReader();
+  r.onload=()=>{ try{ const p=JSON.parse(r.result); DB=p.data?p.data:p; migrate(); syncAll(); save(); route(); alert('Console importée.'); }
+    catch(e){ alert('Fichier illisible.'); } ev.target.value=''; };
+  r.readAsText(fl);
+});
+$('#btnReset').addEventListener('click',()=>{
+  if(confirm('Réinitialiser la console aux données par défaut ?\nTon export n\'est pas touché.')){ DB=seed(); migrate(); syncAll(); save(); location.hash='#/accueil'; route(); }
+});
+
+// ============ Cloud (même backend Apps Script que le cockpit) ============
+const CCFG='cockpit_console_cloud_cfg';
+let cloudCfg={url:'',token:'',name:'console-lrenov'};
+let cloudTimer=null;
+function loadCfg(){ try{ const r=localStorage.getItem(CCFG); if(r) cloudCfg=Object.assign(cloudCfg,JSON.parse(r)); }catch(e){} }
+function saveCfg(){ try{ localStorage.setItem(CCFG,JSON.stringify(cloudCfg)); }catch(e){} }
+function cloudStatus(msg,kind){ const s=document.getElementById('cloudStatus'); if(s){ s.textContent=msg; s.className='cf-status'+(kind?' '+kind:''); } }
+function readCloudFields(){
+  const u=document.getElementById('cloudUrl'),t=document.getElementById('cloudToken'),n=document.getElementById('cloudName');
+  if(u)cloudCfg.url=u.value.trim(); if(t)cloudCfg.token=t.value.trim(); if(n)cloudCfg.name=(n.value.trim()||'console-lrenov');
+}
+function scheduleCloud(){ if(!cloudCfg.url) return; if(cloudTimer) clearTimeout(cloudTimer); cloudTimer=setTimeout(cloudPush,2500); }
+function cloudPush(){
+  if(!cloudCfg.url) return;
+  if(typeof fetch!=='function'){ cloudStatus('Envoi indispo sur ce navigateur — utilise Exporter.','warn'); return; }
+  const payload={token:cloudCfg.token, session:cloudCfg.name||'console-lrenov', savedAt:new Date().toISOString(), data:DB};
+  cloudStatus('Envoi…');
+  fetch(cloudCfg.url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
+    .then(()=>cloudStatus('En ligne ✓ '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+' — sauvegarde « '+(cloudCfg.name)+' »','ok'))
+    .catch(()=>cloudStatus('Hors-ligne — local OK, réessai à la prochaine sauvegarde.','warn'));
+}
+function cloudPull(){
+  if(!cloudCfg.url){ cloudStatus('Renseigne d’abord l’URL du backend.','warn'); return; }
+  if(!confirm('Charger la console depuis le cloud ? Ça remplace les données affichées.')) return;
+  const cb='__consoleCloudCb_'+Date.now(); const tag=document.createElement('script'); let done=false;
+  function cleanup(){ try{ delete window[cb]; }catch(e){ window[cb]=undefined; } if(tag.parentNode) tag.parentNode.removeChild(tag); }
+  window[cb]=function(resp){ done=true;
+    try{
+      if(resp&&resp.ok&&resp.data){ DB=resp.data; migrate(); syncAll(); try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){} route(); cloudStatus('Console restaurée depuis le cloud ✓','ok'); }
+      else if(resp&&resp.ok){ cloudStatus('Aucune sauvegarde en ligne pour ce nom.','warn'); }
+      else { cloudStatus('Erreur : '+((resp&&resp.error)||'réponse invalide'),'warn'); }
+    }catch(e){ cloudStatus('Données illisibles.','warn'); }
+    cleanup();
+  };
+  tag.onerror=function(){ if(!done){ cloudStatus('Connexion impossible (vérifie l’URL / le déploiement).','warn'); cleanup(); } };
+  tag.src=cloudCfg.url+'?action=get&session='+encodeURIComponent(cloudCfg.name||'console-lrenov')+'&token='+encodeURIComponent(cloudCfg.token||'')+'&callback='+cb+'&t='+Date.now();
+  document.head.appendChild(tag);
+  setTimeout(()=>{ if(!done){ cloudStatus('Pas de réponse (timeout).','warn'); cleanup(); } },12000);
+}
+
+// ============ Init ============
+loadCfg();
+load();
+const __mig=migrate(); syncAll(); if(__mig) save();
+$('#ndaTag').textContent='NDA '+(DB.studio.nda||'');
+route();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+}
+</script>
+</body>
+</html>
