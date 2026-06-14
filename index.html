@@ -595,7 +595,7 @@ $('#btnReset').addEventListener('click',()=>{
 
 // ============ Cloud (même backend Apps Script que le cockpit) ============
 const CCFG='cockpit_console_cloud_cfg';
-let cloudCfg={url:'',token:'',name:'console-lrenov'};
+let cloudCfg={   url:'https://script.google.com/macros/s/AKfycbzAtt0MUnWrdMOS1SbtkiaLidYXjNNIRBSJlNv3upE0rC8s64682jbfXI4Gbs6eyKPEIw/exec',   token:'',   name:'console-lrenov' };
 let cloudTimer=null;
 function loadCfg(){ try{ const r=localStorage.getItem(CCFG); if(r) cloudCfg=Object.assign(cloudCfg,JSON.parse(r)); }catch(e){} }
 function saveCfg(){ try{ localStorage.setItem(CCFG,JSON.stringify(cloudCfg)); }catch(e){} }
