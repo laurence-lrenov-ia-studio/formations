@@ -1,0 +1,21 @@
+BLOC-NOTES FORMATEUR - A NE PAS OUBLIER
+
+1. Comparaison : ne jamais comparer seulement deux colonnes si une offre contient plusieurs niveaux ou options.
+   Exemple : si la proposition Mutuelle de Poitiers contient Classique + Plus + options, le comparateur doit tout afficher.
+
+2. Email client final : demander toujours deux variantes d argumentaire :
+   - si nous sommes plus chers : expliquer la valeur supplementaire, les garanties, la lisibilite, la proximite, les options et les points forts ;
+   - si nous sommes moins chers : expliquer le gain sans denigrer le concurrent, et verifier que les garanties sont vraiment equivalentes.
+
+3. Demander a l IA de distinguer :
+   - garanties equivalentes ;
+   - garanties meilleures chez nous ;
+   - garanties meilleures chez le concurrent ;
+   - informations absentes ;
+   - points a verifier avant envoi.
+
+4. Les PDF d exercice sont fictifs. Ne pas les presenter comme des conditions reelles Mutuelle de Poitiers.
+
+5. Donnees reelles en atelier :
+   - contrat personnel : possible si la personne choisit de l utiliser ;
+   - document client : anonymisation obligatoire avant traitement IA.

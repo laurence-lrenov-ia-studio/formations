@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Votre support — Formation Intelligence Artificielle · Mutuelle de Poitiers Assurances</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bleu:#1c6fb3;
+    --bleu-fonce:#15486f;
+    --nuit:#103956;
+    --vert:#8cc63f;
+    --creme:#f3f8f6;
+    --blanc:#ffffff;
+    --encre:#1f2d35;
+    --gris:#5c6b73;
+    --trait:#e2ecec;
+    --ombre:0 1px 2px rgba(16,57,86,.04), 0 6px 22px rgba(16,57,86,.06);
+    --display:"Libre Franklin", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --body:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:var(--body);
+    color:var(--encre);
+    background:var(--creme);
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- En-tête ---------- */
+  header.hero{
+    background:linear-gradient(155deg,var(--nuit) 0%,var(--bleu-fonce) 60%,var(--bleu) 130%);
+    color:#eaf3fb;
+    padding:42px 24px 30px;
+    position:relative;
+  }
+  .hero::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:3px;
+    background:linear-gradient(90deg,var(--vert) 0%,var(--vert) 32%,transparent 32%);
+  }
+  .hero-wrap{max-width:980px;margin:0 auto}
+  .eyebrow{
+    font-family:var(--display);font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;font-size:.72rem;color:var(--vert);margin:0 0 14px;
+  }
+  .hero h1{
+    font-family:var(--display);font-weight:800;line-height:1.08;
+    font-size:clamp(1.7rem,4.4vw,2.55rem);margin:0 0 12px;color:#fff;
+    letter-spacing:-.01em;
+  }
+  .hero p.lede{
+    font-size:1.05rem;max-width:640px;margin:0 0 4px;color:#cfe2f2;
+  }
+  .hero .promesse{
+    margin-top:16px;font-family:var(--display);font-style:italic;
+    font-size:.92rem;color:#bcd6ec;
+  }
+
+  /* ---------- Onglets ---------- */
+  nav.tabs{
+    position:sticky;top:0;z-index:20;background:var(--blanc);
+    border-bottom:1px solid var(--trait);box-shadow:var(--ombre);
+  }
+  .tabs-wrap{
+    max-width:980px;margin:0 auto;display:flex;gap:2px;overflow-x:auto;
+    scrollbar-width:thin;
+  }
+  .tab{
+    flex:0 0 auto;appearance:none;border:none;background:none;cursor:pointer;
+    font-family:var(--display);font-weight:600;font-size:.86rem;color:var(--gris);
+    padding:15px 16px 13px;border-bottom:3px solid transparent;white-space:nowrap;
+    transition:color .15s ease,border-color .15s ease;
+  }
+  .tab:hover{color:var(--bleu)}
+  .tab[aria-selected="true"]{color:var(--nuit);border-bottom-color:var(--vert)}
+  .tab .num{
+    font-family:var(--mono);font-size:.7rem;color:var(--bleu);
+    margin-right:7px;font-weight:500;
+  }
+  .tab:focus-visible{outline:2px solid var(--bleu);outline-offset:-3px;border-radius:4px}
+
+  /* ---------- Contenu ---------- */
+  main{max-width:980px;margin:0 auto;padding:34px 24px 60px}
+  .panel{display:none;animation:fade .35s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .panel-head{margin:0 0 22px}
+  .panel-head .kicker{
+    font-family:var(--mono);font-size:.74rem;color:var(--bleu);
+    letter-spacing:.04em;margin:0 0 6px;
+  }
+  .panel-head h2{
+    font-family:var(--display);font-weight:800;font-size:clamp(1.4rem,3vw,1.9rem);
+    margin:0 0 8px;color:var(--nuit);letter-spacing:-.01em;
+  }
+  .panel-head p{margin:0;color:var(--gris);max-width:680px}
+
+  .card{
+    background:var(--blanc);border:1px solid var(--trait);border-radius:14px;
+    padding:22px 24px;margin:16px 0;box-shadow:var(--ombre);
+  }
+  .card.accent{border-left:3px solid var(--vert)}
+  .card h3{
+    font-family:var(--display);font-weight:700;font-size:1.05rem;
+    margin:0 0 8px;color:var(--bleu-fonce);
+  }
+  .card h3 .step{
+    font-family:var(--mono);font-size:.72rem;color:#fff;background:var(--bleu);
+    padding:2px 8px;border-radius:20px;margin-right:9px;vertical-align:.12em;font-weight:500;
+  }
+  .card p{margin:0 0 10px}
+  .card p:last-child{margin-bottom:0}
+  ul.clean{margin:8px 0 0;padding:0;list-style:none}
+  ul.clean li{position:relative;padding:5px 0 5px 22px;color:var(--encre)}
+  ul.clean li::before{
+    content:"";position:absolute;left:0;top:13px;width:8px;height:8px;
+    border-radius:50%;border:2px solid var(--vert);
+  }
+  .muted{color:var(--gris);font-size:.92rem}
+  strong{color:var(--bleu-fonce)}
+
+  /* ---------- Bloc prompt copiable ---------- */
+  .prompt{
+    background:#f7fbfa;border:1px solid var(--trait);border-radius:12px;
+    margin:14px 0 4px;overflow:hidden;
+  }
+  .prompt-bar{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    background:var(--nuit);color:#dceaf6;padding:9px 14px;
+  }
+  .prompt-bar .label{
+    font-family:var(--display);font-weight:600;font-size:.78rem;letter-spacing:.04em;
+    display:flex;align-items:center;gap:8px;
+  }
+  .prompt-bar .label::before{
+    content:"";width:9px;height:9px;border-radius:2px;background:var(--vert);flex:0 0 auto;
+  }
+  .copy-btn{
+    appearance:none;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);
+    color:#fff;font-family:var(--body);font-weight:600;font-size:.76rem;cursor:pointer;
+    padding:5px 13px;border-radius:7px;transition:background .15s ease,border-color .15s ease;
+    white-space:nowrap;
+  }
+  .copy-btn:hover{background:var(--bleu);border-color:var(--bleu)}
+  .copy-btn.ok{background:var(--vert);border-color:var(--vert);color:var(--nuit)}
+  .copy-btn:focus-visible{outline:2px solid var(--vert);outline-offset:2px}
+  .prompt pre{
+    margin:0;padding:16px 18px;font-family:var(--mono);font-size:.82rem;
+    line-height:1.6;color:#243640;white-space:pre-wrap;word-break:break-word;
+    max-height:none;
+  }
+  .prompt pre .var{color:var(--bleu);font-weight:500}
+
+  /* ---------- Tableau IA ---------- */
+  .table-scroll{overflow-x:auto;margin:6px 0;border-radius:12px;border:1px solid var(--trait)}
+  table{border-collapse:collapse;width:100%;min-width:560px;background:var(--blanc)}
+  th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--trait);font-size:.9rem;vertical-align:top}
+  thead th{
+    background:var(--bleu-fonce);color:#fff;font-family:var(--display);font-weight:600;
+    font-size:.82rem;letter-spacing:.02em;position:sticky;top:0;
+  }
+  tbody tr:last-child td{border-bottom:none}
+  td.ia{font-family:var(--display);font-weight:700;color:var(--nuit)}
+
+  /* ---------- Encadré garde-fou ---------- */
+  .note{
+    background:var(--blanc);border:1px solid var(--trait);border-top:3px solid var(--vert);
+    border-radius:10px;padding:14px 18px;margin:16px 0;font-size:.9rem;
+  }
+  .note b{color:var(--bleu-fonce)}
+
+  /* ---------- Plan ---------- */
+  .plan-grid{display:grid;gap:16px;grid-template-columns:1fr 1fr;margin-top:6px}
+  .plan-col{background:var(--blanc);border:1px solid var(--trait);border-radius:14px;padding:20px 22px;box-shadow:var(--ombre)}
+  .plan-col h3{font-family:var(--display);color:var(--bleu-fonce);margin:0 0 4px}
+  .plan-col .when{font-family:var(--mono);font-size:.74rem;color:var(--bleu);margin:0 0 12px}
+  .check{margin:0;padding:0;list-style:none}
+  .check li{position:relative;padding:7px 0 7px 28px;border-bottom:1px dashed var(--trait)}
+  .check li:last-child{border-bottom:none}
+  .check li::before{
+    content:"";position:absolute;left:0;top:11px;width:15px;height:15px;border-radius:4px;
+    border:2px solid var(--bleu);background:#fff;
+  }
+
+  /* ---------- Pied de page ---------- */
+  footer{
+    background:var(--nuit);color:#bcd6ec;text-align:center;padding:30px 24px;
+    font-size:.86rem;
+  }
+  footer .sig{font-family:var(--display);font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px}
+  footer .promesse{font-style:italic;color:#9fc0dc}
+  footer a{color:var(--vert);text-decoration:none;font-weight:600}
+  footer a:hover{text-decoration:underline}
+
+  @media (max-width:640px){
+    .plan-grid{grid-template-columns:1fr}
+    main{padding:26px 16px 50px}
+    header.hero{padding:34px 18px 26px}
+  }
+  /* ---------- Écran d'entrée ---------- */
+  #cover{
+    min-height:100vh;min-height:100svh;
+    background:linear-gradient(160deg,var(--nuit) 0%,var(--bleu-fonce) 64%,var(--bleu) 140%);
+    display:flex;align-items:center;justify-content:center;padding:40px 24px;
+    position:relative;
+  }
+  #cover::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:4px;
+    background:linear-gradient(90deg,var(--vert) 0%,var(--vert) 28%,transparent 28%);
+  }
+  .cover-inner{max-width:580px;width:100%;text-align:center;color:#eaf3fb}
+  .cover-logo{margin:0 0 34px}
+  .cover-wordmark{
+    font-family:var(--display);font-weight:800;color:#fff;font-size:1.45rem;
+    display:inline-block;padding-bottom:12px;position:relative;letter-spacing:.01em;
+  }
+  .cover-wordmark::after{
+    content:"";position:absolute;left:50%;transform:translateX(-50%);bottom:0;
+    width:52px;height:3px;background:var(--vert);border-radius:2px;
+  }
+  .cover-eyebrow{
+    font-family:var(--display);font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+    font-size:.72rem;color:var(--vert);margin:0 0 16px;
+  }
+  .cover-title{
+    font-family:var(--display);font-weight:800;color:#fff;
+    font-size:clamp(2.7rem,9vw,4.2rem);line-height:1;margin:0 0 20px;letter-spacing:-.02em;
+  }
+  .cover-sub{font-size:1.08rem;color:#cfe2f2;max-width:450px;margin:0 auto 24px;line-height:1.55}
+  .cover-meta{
+    font-family:var(--mono);font-size:.82rem;color:#9fc0dc;margin:0 0 38px;letter-spacing:.02em;
+  }
+  .cover-cta{
+    display:inline-block;text-decoration:none;cursor:pointer;
+    font-family:var(--display);font-weight:700;font-size:1.02rem;
+    color:var(--nuit);background:#fff;padding:16px 32px;border-radius:12px;
+    box-shadow:0 12px 32px rgba(0,0,0,.24);
+    transition:transform .15s ease,box-shadow .15s ease,background .15s ease;
+  }
+  .cover-cta:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.3);background:#f3f8f6}
+  .cover-cta:focus-visible{outline:3px solid var(--vert);outline-offset:3px}
+  .cover-foot{
+    margin:42px 0 0;font-family:var(--display);font-style:italic;color:#7fa6c8;font-size:.84rem;
+  }
+  @media (max-width:640px){
+    .cover-title{font-size:clamp(2.3rem,13vw,3.2rem)}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;scroll-behavior:auto}
+  }
+  .dl-grid{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin:6px 0}
+  .dl-btn{display:flex;align-items:center;gap:11px;text-decoration:none;background:var(--blanc);border:1px solid var(--trait);border-left:3px solid var(--vert);border-radius:10px;padding:13px 15px;color:var(--bleu-fonce);font-family:var(--display);font-weight:600;font-size:.88rem;box-shadow:var(--ombre);transition:transform .15s ease,border-left-color .15s ease}
+  .dl-btn:hover{transform:translateY(-1px);border-left-color:var(--bleu)}
+  .dl-btn:focus-visible{outline:2px solid var(--bleu);outline-offset:2px}
+  .dl-btn .ic{font-family:var(--mono);font-size:.66rem;font-weight:500;color:#fff;background:var(--bleu);padding:3px 7px;border-radius:6px;flex:0 0 auto}
+  @media (max-width:640px){.dl-grid{grid-template-columns:1fr}}
+  /* ---------- Version imprimable (Imprimer / PDF) ---------- */
+  @media print{
+    #cover, nav.tabs, .copy-btn{display:none !important}
+    header.hero{background:none !important;color:var(--nuit);padding:8px 0 4px}
+    .hero::after{display:none}
+    .hero h1{color:var(--nuit)}
+    .hero .lede{color:#333}.hero .promesse{color:#555}
+    .eyebrow{color:var(--bleu-fonce)}
+    main{max-width:none;padding:0}
+    .panel{display:block !important;page-break-before:always}
+    .panel:first-of-type{page-break-before:avoid}
+    .panel-head h2{color:var(--nuit)}
+    .card,.note{box-shadow:none;break-inside:avoid}
+    .card.accent{border-left-color:var(--vert)}
+    .prompt-bar{background:#e7eef4 !important;color:#15486f !important}
+    .prompt pre{white-space:pre-wrap;color:#243640}
+    .dl-btn{box-shadow:none;break-inside:avoid}
+    .table-scroll{overflow:visible;border-color:#ccc}
+    thead th{position:static;background:var(--bleu-fonce) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    footer{background:none !important;color:#333}
+    footer .sig{color:var(--nuit)}footer a{color:var(--bleu-fonce)}
+    body{background:#fff}
+    a{color:var(--bleu-fonce)}
+    @page{margin:14mm}
+  }
+</style>
+</head>
+<body>
+
+<section id="cover">
+  <div class="cover-inner">
+    <div class="cover-logo">
+      <span style="display:inline-block;background:#fff;border-radius:16px;padding:16px 22px;box-shadow:0 10px 30px rgba(0,0,0,.18)"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAC0ARgDASIAAhEBAxEB/8QAHAAAAQQDAQAAAAAAAAAAAAAAAAUGBwgCAwQB/8QAVhAAAAUCAgQEDRIFAgQHAQAAAAIDBAUBBhESBxMhMRQiMkEVI0JRUmFxcoGRlLLRCBYzNDU2N0NTVFZic3SCkqGxJGOTosEl8ERV0vEmRUaVwuHi8v/EABsBAAEFAQEAAAAAAAAAAAAAAAACAwQFBgEH/8QAPREAAQMCAgYFCgQHAQEAAAAAAQACEQMEITEFBhJBUXETYYGRoRQWIjI0crHB0fBSU9LhBxUjM0JD8WKy/9oADAMBAAIRAxEAPwC5YACMNJl5uWyykTEq6vJxHKxOVQ3Y063dD9vbvrv2Gpi4rtoM2nKQX8pGsKfxr5u3+0UoUJ1bttj6QRvlJfSK4SRlFVtaorrFOzPxgiOii+paApuHpPPcs7X1gew+iwQrU1vC1PpFE+Vk9IwNelp/SaJ8qJ6RUNwUcKxRKGrVI/5nwVfU1srN/wBYVyK3tZ30lifKiekeevazvpLE+VE9IpaoUajFC/Nej+YUyNcK35Y7yrqmvezvpVC+VE9Iw9etnfSqF8tJ6RSsxRryg82KP5hS/O6t+WPFXX9etm/SuE8tJ6RrNelnfSaF8tJ6RSutB5lHRqvRP+wpXndW/LCuma9LO+k0L5aT0jA152l9Jony0npFLjUBlB5sUfxlHndW/LHirmmvO0vpNE+Wk9I1mvG0vpNE+VE9IppgDAdOq9Ef7Cu+dtX8sK4xrxtL6TRPlRPSNJrvtL6TRPlRPSKf4AHPNij+Mo87av5YVuzXba30hifKiekajXZa/wBIYnyonpFSQA82KP4yjztq/lhWwNdVrfSGJ8qJ6R1s3jZ8im5Yuk3DdTq0T5i/moKiCxmhT4OGP2y3n1FZpXQ9Oyoio1xOMK10Ppx+kK5pOYBhOCnGI9zGn2Jf2HWOSI9zGn2Jf2HWM+tIgAAAQgAAAQgAAAQgAAAQgAAAQgAAAQuSRcUbMHDn5NMx/FQV3kFFFFlFVPZFD5z99UWAun3tyP3Y/mivbwXuhgAHHkqTSzj6ISM8CM6Cy8CYk0cSLtBkzT4Q4XPlRITqzDTUyAJKydwCTASK4HCsFmdjnsTJHYyLZRu4T5ZD5eJjt5hqk7cmmUE1nHsao3jneXUrHy5T40rWnFxx5hNZUYADOeXXyVLWpPl3onDPDLmm8oMDbxmoMDbxKUBa6jEb1ElE0k1VElKJqcg+Tinw63XGgclORCwqPB7UeBQSwgw8GRS6xVNNP4ziBcvO2HtrzxIN6o3cPFEU1TkRzGyGU3E28+7xhs1GtcGE4n5J5tF7mF4GATfAF6+Lae2pPHg3zlu4XTRKc+p4xSGNty90II6yo2q0PbkUVKbqTix4ghAAACkhAAAAhAsboU+Dlj9sp54rkLG6FPg5Y/bKeeM9rL7KPeHzWm1U9rd7p+IU4RHuY0+xL+w6xyRHuY0+xL+w6xhl6AgAi7SjpltSyk1GqbpOUl6bKM2x6GyV/mG3F7m8V6l9L183rJ1Tc3MnasP1fBqmLkL3adMUP2scO4LS00RcXDdv1W8T8hmVX3GkqNF2zMngFdbEAqITTixtCC6B2HGKOj8paUlj1Mq4P1R8lK+IubYGm0vDSNpGnU4x5eTlm3Px3K2vK1bNkqbznyZS4U7e2okM0DWMucQ1o45937ph2mKQhrRJ6su/9leelcQCFSaY9FllQbaFjJNxKEaEyU4MmZXPXnMY9dla134htyHqpoVNTBlar5T66yxC/sIbNF3VTFjDHXh8VKdpC3Z6zxPerHAFWa+qse0/9GN//cK/9AspAPDyUCwkFW9W6rpsksdHHkVMSlal8GIaurGvagGqInrHyTlC7o3BIpmY5/NKQAAERSUAAACEmXT725H7sfzRXt4LCXT725H7sfzRXt4L3Q/qu5qj0tm1IzwODRGimndLucc+14Vgs4/FhWlP7cwb7wLyFOhOhmZdfGSzwrQneF21/Ywva+NLY/EQO8/RZ6nhV6Q/4gnuGHjC79IFs+uPTVwb2NkuzRdvFuwQpTjV7WOGUafVDzSL21rWSap8HQXIZ2iT+VhSif8Aaag7NI1zxLmCatrccJOJ2ebt2Lw6JymMkkXqK9jWplMv/YIGnXVOdI8TbyXtZo2atO8zm9GAi2bXvq0ekEBoMDkIJ7ScOSVfPYyjcCkQS8iTzMgdgBnrKZ+kS129rtIOlHLlV6/YcLconwyo48kpcO4ff1h13fZkTAXHBQbmXcp1dt01ni2o1mpUP1JCU3h7aRbQmrk01oNuhjnoO3I1Rq5PxUtRTCpsD12VrjU1MKbcQm3KmpL+qXbt5JJRJvV8iVGipK0zkTLsy481TUqJlG9c9rTt47LnGI7O6fBQq2j2U3P9CPTa1ue7M9v1WWntvbCSrWI9cLhN5AxybdBgmzNlOauFc1T45aY0wr4Ax7ltRtCaP7euFVy4q/ljqH1GzVkSL1XXx2kHRpnaytNIE3JSDFy2SXdmIgdUlSkOUpaULlrXfxaUDy0uWpPS8jasFCRrhVm2iEyEc0JlQJm5ZjH3U3FHbep0FOg0vwMknDhJHeUq4peU1K7hTxbAAxnOAe4Jh3dajaBta2H9HTlWQmm3CTo8XKQlcMmHPtxoHAysW04mXjbeu2TmfXA/1eDaMITVNNZyCqVPjWte9ps/uC5pU1bbTharF6kq3i4zgLdM6xK6s5aHpU5i156baUr3B36TZXSg3vqRY23BqM2658CPGUYXWLEy04x1q0r48S4YBvyqtUbTaHRtAumY34CYOXBPizt6T6jiydkhsRO7ExIz4z4phR1nKx2m9haCqvCNRIp9O5OdOhaKY4c1cgWD/wDi/wBUx8oiWVL/AE0P/wCP1GHqfU3DzSLJTTpVw8dsI1dznOeqiiyteJv31rgao3aAE3vrouO4VWyp3jCOcLanJXW60/U5d+OwOXFRzDUJMlrAJ63HP4JFrTa4U2tENc8mOpowHxSRKRjnSLpdnKNXKbdtRwsss7PxiIt0uJnr4i7O2Oqtm2XNWhPyNpyU8ovBI65dR+inqXBaFrjq8u7k84VtANHCVuXukwZNntwcGTom0cp5tcWmfOWpK7+Nvp3A2bzmtJb2ExnkZKLh6n1PBiNeBoZuxy0pTP4cQA1TW6Gm4NDNkDHPAboxkYDEDeFwtoto9PUYXF+0Thlid84Qcd6YAAAF6s4gAAAQgWN0KfByx+2U88VyFjNCnwcMftlvPqM9rL7KPeHzWm1U9rd7p+IU1NHCLaETdOVE00E0cxzm4pSlpTbWorFpeuOS0k3lwDR7IPiR7NHUuXRXR0Wyymavj/yE/SzeVx37eBdHURTgUc1W4OoQh/ZsnLVUN2JdtcP8h9Q8UyhGbSMjUtW3bnL3xzc569etRmKjxopjapg1XDAbgOJ+S31hZnTFRzMRSbmd5PAfNQ+bQvdvykb/AF//AKGtbQ3eKaOtTSZOO8cl/wAifZyXiIlE6slJsm/265E/3qFCHdpSUO0fNvY3CJVid7UuIQNZtIAbRAjkfqpbtU9GE7IJnmqpyej+8Y7a5t55q+zQJrP2DcWSVSVUTUSUSU6sh+L+gu2E6Yg4mWR1ctGMnif85ApvEbfQTaGtzx/ep9x+v1Vdc6lsImhVI5j6fRUvrQYmKLHXLoUgH2dWDdOYpTsD9MS/Xb+ojuG0c1ZaUoa1bwc8HZv1i5Fm3G1xa1wKUvWxPxNtNmI0Vrpu0ugSw4gTBGOCzF7oG8siOkGBMSMlhoD0bvL9u9BV02U6BsDlO9WOTinw20Sp161/YXpKWhKUISgTLbgom3IdCIhmSTRmhTAiZCfrXr17YVhkdJaQde1dqIaMgtFY2YtacbzmgAACvU1AAAAhJl0+9uR+7H80V7eCwl0+9uR+7H80V7eC90P6ruao9LZtSM8Ca+dOVGabZRyoo3T45Ec/FIau/AoUngRnQ01MAxKylySJhJ5lVE1k1UldWomfOQ5OoNTqqDilHTl68O5euVHDhTlrHPmNs7YkPR9At+B3HLz0RnbxkcZZEjlMxS602OSu3fuEcJoKuVtUmko4U7AhDGN+WglUarHvcAPV381U3VF9NjSf8pwx3GP+LtkbquR60QbPpyQVTQOU6JDrm4hqbjd2g4JSalpKSTk3sk5cvE8uRc5+MTDdhUc7lFRssomokokonyyHJlN+Woc+iS2m113onGyNVE2abZRw5OTimylp/wBVaBdQ0bemahAgAnADtTNE3FzVFIOMkgYnu7khT9wzU9VCszJuX+o4pNcfNkx6w9Xui41IgkQpNvFI9PkNtebJs/wJEt61dH18PHsLbh5qMmECqHbHdKFUSWoXZzbqbhFXBXPDDtU01VF85iZCcY2am/cG6FShVlmzBbBgiI6+Cl16NzQh5ftB0iQSZjMFb5qblprU9FpJy81BMiOuPmyF7GgUPXtdnQ7oZ65pHgeTJq9ebk9brhEdIOGyuqcpqt1OwOSpTeKoXmMrCt7EfRjm3+ESrpwU6Ekf4lOmHEp4jbuyDz2Uw1oDARPVhO//AIm6T6pc6XlpjHPGNySIaWk4V5w2IfOWbjJkzoHymy15u4M4mfm4mSPJx0k5bPFM2dch+MfHfj1wqSFqKstH7G63Ln2+6Mi1a5K8kuOJ618AysKWhYlaRcTVtdHU1G+RHPyUj16qoS+pTe1zmt2t27GN2KWynVY9rHO2d4zwkTOCQ42Tko2R6JMnzls843TyHqU+3ft5x03Bck9P1J0amHz/AFfI16mYpPAExqg5cKkSbJquVOwTJUxvFQeuEVGy1U3CSqSifLIcmU3iqHjTYX7UCR3pjpKoZsgnZPOFqAOhNq5V9ibOVOJn4iZuT2Xc7YyZMHz3PwJi5c6vl6lExv2Ci4DekdG6YhcoBmomoktq1ElE1E+WQ/FMMB0GUgiECxuhT4OGPfrefUVyFjdCvwbse/W8+oz+svso94fNabVX2t3un4hINjW8m2uu67lUT6Y7klm7b7Mp+Obwm2fhDocRSr1FRJJXg+sIYmu6omPVUCkoVPXar2Pjm/U2Nf1HPckhJRrNDoTBqSqih8nEXKmVHHClDnx25OvhStdm4eeXNZ93X2jyHZgF7NZ0mWNoGDme3E/FNON0TWUy6a5jFJV51bqQUMsY5uyrzfoHvDpNmzNNi2STTTbkyEITkkLzYBoQc1dEte0tbzZrHKKMM2pIdBZPhJSm4+CmFaE7WO/GgX7Zk0pJBo/TSUTTdk5B8MxPq1w2Bd7TuWEGuSe2c8kzo+vZVgRbgAjqjLA80u5Q2dIk9LQEamrCQT2ZcqLFzkbE5CdNpzV7eXZTuh0GGCnsIjU3BrgXCRwUyo0vaWtMHim7o6vGJvVY7Fsk5j5FD20weE1a6Jeyy89O2GX6p10nG6QbOcp9L4AQq35VSVp+wk61GLFS8OiarVPhqbNREi3VETqclal/SggL1TM0nJaTVE29elx7ZNsfv+UbzijQ6vU2Vb4OYIABnujPtWU1nqVKNmWVDOIg5TiD8ArplqMgmWyvwm3I1z8q0SPxu2SlQpivIgwkgyJQAABxdQAAAISZdPvbkfux/NFe3gsJdPvbkfux/NFe3gvdD+q7mqPS2bUjPA4IJNK3LEd3fq01JVdzwRhriZio9meha7K15Qb7wL8dLWw90fktq43zyPUaPDOEVmyOszlrm4vd2139oXlcEsaIkSJjgs9TID3GQDBicMVvlLhmnGgt27mpJR4rJyPB0anoXiJFwx3U+ocdDGFcW5o/hlYq4Iq35CWTK7fv3K1NfkrTEhEy78MK7cA19Jc/ASVrW/B23wlNswIsdZFYnGzmwwxNurXl44dcdUrNWPeEDD+uOUew0rGNitDnI21xHFKYcamHc58OUGxQf0YOyQ0uJI2Z6hI/bgkG4Z0rpcHOa1oBLok5uh3bGfFJGmm4Imedw9GTnojINGmpfyBEdWVwbZhhT81fxBa0At2rODu64JF90PbptCsqOTkzanPtNxab+oEaXB0J6ML9BOFKR/xJ3GGtPs2mrhu24hy+uiLbaHD2qy4R0TdyJXLzpfFyU20wNz14hBPrWx8lbQpzBI7BMnq7Msgq22vAb19zViQCRwJiB19ue9L8FL2No54VIwEw5uSccNzItj6jVoN8eeuO/jUKOd27caPdGkO9jVdXcNyHUcrvclDKIo0w4pMd2NTl290RZUSi6mLLvC0YBtcc48gZCFQM2PkZGWK4Js5OG6uzqu2E17bo3Nc6Xgn0t+ABgQN08BzT1pe9M1zWwwgejjAxIkyTnG/uWekh24m9CtrXBM11syo5WR4TkymVSpU9NvX3FHLpi/0W1rGt5JPpjSN4ctxOWooamGPiP4wiX/djKadxUZHNlW9vQpCotUT+yrF2Zzn5s1cB26Z563Z66WM3BOXLxPUpkXbLoVTKiVPDAmPPm42OARb0HsfSaWwJe6OEzAPDAlPXFem9lUtcCYY2eMZnrxCeemC+rmgGluwjZ02ScqxRVZD+DT9kPTbgWtOJ1W4NZrSsJ6nN2rX2xPS+Qh/5SVKf5Ifxg0zTVlXYtW5YmXkVJVwRFHgCzXKREtN+J93gpXeOW7Z+3ZbRRbMQ3fOUpSIzEO01PSzmObjHz7uv+YN21DZo0mhhBLhtYRlJ7piDknbm42q9ZxeCA07OPGB3xmM09YaBXtjRzDqRU3C29Ky5OEv3709CrkSryCJU34dfD/IZ+maeibiWgGsc+6MyrRtwZ5JEQ1fCFK5cmHX6rxjufT1hXpbEG2ueTkIOYiWxWmsRamXSVSphuw3bv+4Z8Y4tiO0jMXyCj1S32rtFbOsjQy5yp4VriSmzaem7rVCrWi4PNWoDtjaOXdjvwyEx3Iu67ejbSpkbDtkZ4jKcN2OZzUj6ar1l7bmCWrDVZt6IRiLZ65KgUyquJORjXdTbzdkBi7mqaFYp1o5k+DKRJVDzjZtl151N9Va89ab64dbuCNbzmmVx6QX0wpVVNm7eZ+Rx9Tspu6+Wm4Pe1pnR/YLx7OQFwys49VbGbNmZ2ZkSEzYeyHrsrhhzBD7Torem1rJfgcpBPA8M8zklU7w1rmo5z4ZiAZggcW8cshmovlpB7LSS8k9V4Q4cHzrH7Mw4wAF8AGiAsy5xcZOaBY3Qr8G7Hv1vPqK5CxuhX4N2PfrefUUGsvsg94fNaXVX2t3un5JTdM3KslrU1erCuUvSQG6WMsw8yiCV7g15fTaDwC0KG1fTUulhPYsdVq+BNk000z58hOKXabGoUFE1FfYgIs9X8ap+AcxKUCBjvXPcLFzJRy7Fs+4HwgmQ6xCZjauteOWm2mFa05+YNi17GqxvaZcrqps4d2Q3BVmy6vCW5ubJTHJ9auNK0D4KUZCXRu6lFrmtiD1KuurGncOa9xII4GEh2FISScC+mLkh1I6RZtja/jlMkth1ZMK1wpXDHCu4QPo4siV0pXo7dVUUbx9VjLP3mTkZjY0IXrnqJm0vOXrbR86atvbMusmxJ+Lf+mIfehyOjbfs9rAMkyYokzrK/LKV5R/982AutHXzbOg+owQ95gdQGJPjh+yzumbGpeVmMcSWMEk8ScAPA+CeUU0Sj4xqxb59W3RKiTPyspaYUx8Q7AAFfnigCEAAAC6gAAAQky6fe3I/dj+aK9vBYS6fe3I/dj+aK9vBe6H9V3NUels2pGeBGdBZeDRCRLmfnWkQ29kcLZM/YF3nN4KYjSscGt2jkFlK7S9wa3Mri9a80pax7lTbf6WmfIdbP9bDYXnpmDYWE/0mWszHXtaUTquhkVFlSZk+snn1h8e3XL+URdo2tplPrSj2W4T0PiWnC1kW1OnK78CE/LUFtfEse+sIgjDfBAI7VHvdHDpKbKJnaBx6wTPZv5JiKDA28Oq41bTlasW1sREhHuFFsi3DHOsS24UJhXw7Q47zi9H1pyK9tPYmeeSDdH2/r6JlOrUuNK0J2P8AvaJpuwNkbJkzhvgb84Vc3R5dtEPbsiMcYk5DKd3BRdUYh6xFrxqmiyYu57wnhDd2m0ZkIfinNXCpsdm3lDClsxqeiE93OuE9EF5LgjMmfi5aUxMatPAcdN3TmOvZ7fvNdbYVYB/87XZ++5Mqo8EnQVo2eno0Y3bdb2RbcIeKE1LbKYzhMuJcqdK7ttNta9iOONti2+hD68ppWRZ20o7M2jGaOUzl3Wn1q8WlKYb+71uMjy6ljAOBjLM8Bx+5UgaMqwDIxE55DieH3Cj0w8ElX/b9nttH8NdUA2lWCkm5MiRs6XooXKXNnr46UGbS0bOjdHUHdNzvZFNV+sp/DNcplHJSmrShSY4ULTdWtahI0hTLA6DiYiMZC6dGVdss2hgJmcIKjAAkDSja0NEoW/L2xwzgc621yLZzxlSG2bNndCoW2bCtSRjbfvJaRcSzoqZnijZaiaEdn5OPVGrurXtBRv6ZY1zQSTOEY4Z933mu/wAsqioWOIAEYk4Y5d6isAftu2dCPZKfknEwp604U/HeET6a4xN0shC16s3+94UrstG3HGjRS84BhMw9G7krc7Z+fNrimNSlDkr4f3A6/pB4ZjiQORO777VxujKxYX4YSeYGZHV8VGABJje27TtixoO4bsZSkwvNZjokZr0RTbkLhvNznrju77rBgzZ45SXdKwyTlOPz/wAMRY+ZQpO3hzh2jctrOIaDA37sDBTVezdQaC8iTGG/ESFwixuhX4N2PfrefUVyFjdCvwbse/W8+optZfZB7w+au9Vfa3e6fkncNZk0lRuWSUbLapT4wmcn1y1GJR5o4Q4r2uif6bSOAWORT4tX84y6b/LGQBxLWJdb/L/uAVLW/wAwbB1R6Xxo6BKS5+yJSPd8LWSeQySntdgczjvj5ctP0qcPe0Y/gzOqh06Eqfk07Q1WvIsnj16xSTV4Q0OUixjo1y5q0xwofdWocomtYZDjuyVFcXRLTSbxxQAA0rG1SNT0TqetOpKHVAW4ARXc4zTZqqpm6YTi5D8U2IS+GH4iqatHKny/1q9QnTw7w26oBkpdOzqOEnBO4A4YmqnBaFVUodTqtubL2q164AsYhRiIJC1XT725H7sfzRXt4LCXT725H7sfzRXt4L7Q/qu5qh0tm1IzwO2zVPWfZT681E01JB2fgkaRbk7+PXubK/lDSeBJfLqKIppKKqKJp8ghzmyk7heYaF1HpmbBOG/rHBZo1+gcXgYxh1HipT0cXa4uRW4GKsFCs0+hax87NrqzH5stdu2m0Rto8aX1HPWVwWxEPHCah9V0smZJYvORTrU7ddwQte5be1nKjfqOIcxeL2Owam0zLMUdWyl5Fmn2CLo5S/loYOMsNjb6OIdGBywCr6ukNs0zVmWTiCJxiN0YJ4aWrb4ZpKXjbVjaKuVGabh40Z4G1K3G1haf2Vwp1wq3jSSktDnDr8ZHZzbR2mjFLuSaty4JXDOU5a7a7M2/scRFCDx62ecKbuXLdx8sQ9Sn27+NTaPJWSkpJZNWRfOHaifIOquZTJ3MQ75E+KbS4ehGOO11jkcsdyaGkaX9VwaQXzhI2erdmPipTcQEzLaBbVYW4xVf1XfrLO9T1Js56Fz9am7b2hz6Y4l7A6NbPiUyVVZoEWVdOUeMhrzYYUz02Vry/wBRGjeVkW7RRi2k3jZupy0U1zFIfHrlpXCo0Kv3qjNNio+cqNEz5yIHWrqiG7Khd1N45TsaragcXCA4uyM4z4ieCdfpGk+kWhh2i0NzwwjLqMYqRdNlOhNt2VansajSKK4WJ/MU3/3FOFO77cmri0X2BS3WNHbdu3WI51JylKiqbJiZSuOymw+NebaIhdOXLhbWOXKrlXsznMY2HhG5CTkWzNRi3k3iTNTlokXMVI/dLjhUdFk9rGbLhtNJOIwMzPxXf5hTe+pttOy4AYHEARHwUnadY17EwVlQbdNRwyZxxScKT4yKq58M2Q3Pux7hhxae6cHd2xaDelT9C4hEmT+ar1Pd4hPGI8cSMk5aINnD5dRuh7AQ65jFR7ynN4BpWdOFFuEqOVVV+L0w5zGPs3cau0doWb6ZZtunZ2u0nf4lFxfsqCoGtja2RyA3KZNJTqNjdL9owj1RPodBItUlN2Um0tamr/bUI+mSy7sc3/cEulEOXEepmdkdkw1GponTefHCmFKbu0IxdLqOVlFXKqjhRTlnOepjeOo7FJyaUjuhqkxIKM8mTgp3J9Vlp1OXHDAFOxqUSxzHCQIM85kdcrtXSFKuHtqNMEyIOWEAHDKFMGi51PU0FySdl6tSdbyutWR1JFFdXWlNpSH2VrhTZ3KiPr6LpBdLMfXgrI6x4f8AhWzo+XnpTYnsyb6c1A2I9+9jV+Exz5y0V5GdBYyZsvdoB6/evXfCXr1y5c/LLLGMbx1BSszSrOqCCCZmMeUrla/bVoMpmRAjA4HrhTVoqibnbtJS1b4t9yS0k2x1lFn5MpWh6UxzJHrvx+ru7XPBptwUXs9NvWnBnsvIuW/yK7k5ibPq1qEwO21u+k973EelGAmOePH5Ji8umVmMYwH0ZxOfLsQLG6Fvg4Y9+t59RXIWM0KfBwx+2W8+oq9ZfZR7w+at9VPa3e6fiFLzJJnN26h0xI9KEyFOWubIcuw1O7StK0rTtBuSsY5jlsVPYuzJyfD1hDGjnSl6ytLNwW9NK/6G/lVOP80Vqbl95Xn/ADdcWOn5yEiWiSss+QSSdnKiiQ9fZjG3FLTnrXEYy80e9jmgjMYH74L0DR+lQAYyBxCZgyzDffSCMVAqXAetGbdLjLkOfkEruN3e12wn6O2MbetrNLhbybijZxm6SQhSmIahsDFrXbtxoKzyariQMBv3LRDSFvsgudBO7fgt/CWyfsqqYcEUxUUR4S5/g25ONnPXKbDr9qndHeziISCRO6yJJUTLmO4WPyKdfNXcIXv2+3GkqeLo+s9zweOfn4OtJZM+tLlNU+UuziUpTr8btc86y0c+s7HIZncB97lUaR0wxgDWDE5cT98U4dG2l+LujSlI20xokSL1P+mL4+2Tp1rrK/ipXGnaJ2xMoojdGjfSHowlm8pwVVwk0PnRkmGZQpMOc3OTwiwuibTzbF0xqLafdtoaYJxT0UPlSWr2RDc2PY1/UXF9o9myKtri2IMfFZ2zvn7Rp3ODpkSppAE7ozE6rXdFWOq7PXky+PEMG59MtqRzqkXAmUuaZUrlRYRvGzG7Z+TSnjFXToVKhhjSVZPr06YlxhKmkBFFirSScLJIN1DlIY51ClLnrsoXbz1BajGROrrvY0uzP2+x7YSrZtCeuOYbXVpGVbncN+PGwiPGbMTdmavxiv1uYSgGK1rTa/B08Yy7FY0tJ1TQ2C3lOccloaopt0SpJUwJTcAbwBQEZKGSSZKTLp97cj92P5or28FhLiKopAPkkiVUOduahCF59gidnYU09S1j3g8e37NY/G8QudGVqdFjjUdCp9JUn1XNDBKjp4EZ0YTahZ1jRvunJOJRTsCcUviL6QoITFpxPuRaqff6shf121DtbW3R9vhtT99/gqh2hKtX13Bviq8pxkk99rRj1x3iBzftQby2PeLn2O1ZbyUxf3FgltIThOmDeIbE7q1f8FHMbSRJf8uZ/nOK5/8AEO2b6rf/AK+gSDqxQPrVT2D/AKq/ObBvZPpitqy3kpjfsEiQg5tl7eiJFt9s1OX96CzyGk5SlP4iH/It6aBUZ6RIBzXVuU3Dfv08xf0DtH+IVq8wY8R8QkO1Vtj6tUjmAqcG3DEXMdW/YN2oYqxkTIV7MhClV/TCtBHt0+p/inOdW3JdwzP8i66Yl4DU208OI0trrNaVwC7DrzHh9FAuNVbqmJpODx3ffeq5VHgdt5aP7stPOtJRivByf8Sj0xLwmpu8IaQ0FGtTrN2qZBHUqCrQqUHbNRpB60GHg9MPAtNLEAADpSkAAAcQgAAAQgWM0KfBwx+2W8+ormLGaFPg4Y/bLefUZ7WX2Ue8PmtNqp7W73T8Qq3aTPhCuD7+t5wUNG5pa6NJFqsXr5684I8R1OuWMYrZJM2epaY7qbB36TbWfKXtMvmSqbnWPFD5OSblfqGY3VloSSTcpKuY56mfORYmJTEN2qhmy0ha31EU6FQFwERvBiMjin6m1TrlxBifmrR6cJ5qXQ3cbgsu4eEmn5WjNFyTLqsFKVOUtOtSlDfoIw0BaXW2j2BnI2WbOXia6xXMeij8rWmCha1rupXAlfGGRfd/XHeqMclPOk1U2KRiI6kmrzmrvOYtNmfthqhvRuhhRs/J65kkyY+yn7nSbjXFSluEKQNIulO579d6uRdVZRefiMGx8qfdP8pXuiUPUiQ3Crjk5tQmBGKBUSd+p/8Akv6iuaNemi6fqXYPoPonaOlafxEqsZ4fva4EJ/YQtfCF6W2LWzLKYicEaL6S5vdt5mMfopXruDGuXRTo9uJVRWStWOM4U2nXRJqVDV7Kpk8Ma90PkAyDKj6ZlhhbB7GvEOEqHlfU66OFfipZInYEe1y/rQPqybGtezWdG1uxDdnjTjq4ZlD98eu2oc4A5Uuq9QbL3khNMtqNMy1oB5IAAAYT6AAABC5JFRRKOXVT9kIQ2AjaQXUc9NcqqKd+cSRL+5rn7I37CM3AoNMEy0bk1VxSesOJYdqw4lhlqijlcig51B0KDnUECokLSYajDaYajCMUkrWUyqS2tSV1anZk4pvzB0Qd+zcb0pyr0Rb/AM7lfn9IaphibcO291WtnbVFxaepc2i3JTLB3zb8t0pRTgThT4lzyT9yu6oRrv0SWdclDuU2PQ5yp8cyylKf61SbqiMDBUh7hm4n2k+UTT7A/GL+Wo1mjNc69sR0gM8W4d43oqmlXbsVmBwTburQZdkbrFYVRtMtuwIfVrflNsr4KiPJe3puJW1UlEPGX2yBi/3bhZaL0l/FS0Z+Nsf/AONfSHA3vW23yPTX2r+o5J/ug9BsNfqNUDac08/RPjh4KmrauWdUzSeW+KpkAXIdRliy/srGAe/gS5gmuLC0bqra3oHC/gPl/tpUaJmttq8SW9xBUB2qdafRqA9/7qpIBbD1maN2X/k8Kn356G/eoxTLo8jfazWFT+xalNv8Abra42VPPDmQPqgaqVB61Vo++xVbZx7177SYuXP2aJjfsHNEaNb2kqk1UGq2T7NycqRf1rj+gntxekQ29pNVFO8IVMoRH17SSntZs2b9/wBMN6BQXv8AEe1pSGQeUu8cB4qVT1btWf3KhPKP3TRh9Canss1OJp/UbEzf3n9Aku14yNhIdCMiVdYyTObIfPm41TbeMGK+kXz32y5UU838oell+9tDvzecM/b6319N3BouENAndxAyHPrV3o+ztbd39FkGM96jK6mqik9JK8GU1fCTcfIbsuyCE4jUnPStb+A/GFvY1JNSJb6xMm1Ev7DimLZgZdDVSMSzcbN9U8pvAam2grK2gXueXsqYkzl85XHaMdJLX59Spw6stsr8mn3hMo0p6PWyn/Hq/gJ6RLGk+w1bPkUH0c5cOId2fJUi3GM3U30pjz0rgGprRBq6W0xYP6Lp3DtMKrrUm0n7NRoleaOtFEJPXEgxVq9Ubp8dyfWZeJTueCnhFsIxg2jYxCOZEok3bpFSRJTqC0phQNDQ/A9CbaK+ckpR2+oU9a9ZPqKf58IfY1NhWu6tu111ULiccTkrywtW0ae0BBKAAAJanoAAAEIAAAEIAAAELjl/c1z9kb9hGbgSZL+5rn7I37CM3Az+mPWbyTNTNJ6w4lh2rDiWGXqJgrkUHOoOhQc6ggVEhaTDUYbTDUYRiklaTDE24ZGGJtwYKQVgYADACEkrEwAGABcWJigyJfJJDIATAQsSlTGQAAQgAADqECQbN9wUO/N5wj4SVbLbg0OxS+MyZ/HtGp1SYTdvdu2fmPopNqPTJUlxHuY0+xL+w6xoaE1TVNLsCFG8ehKemzpMQbubAm03NOlkZqK+ElM5f1LQQhomtdS57i1zlP8A05ofOt9frE8IeOnibknMvE2RHKUTJJnLRzXsymPkoTudcSdbUKxgIhCNj09WimX8Rq89a9sU9e0Zd3QJyZn17wFTPptvLwjdTwPWc4SsAABcK5QAAAIQAAAIQAAAIQAAAIXHL+5rn7I37CM3AlJZJNVE6SnIPTLgEw1tRHzZT+uf0iqv7KpcFpZGHFIcwnJRgsOJYSxW1IWv/Cqf1z+kaq2fb/zFT+uf0ilfoK5O8eP0TRpFRCoOdQTHWyrc+YKf1z+kYGsa2/mCn9c/pEV2rl2d7e8/RJ6Byhkw1GEzmsS1/mKnlJ/+oeesK1/mKnlJ/SGjqxeH/Jvefok9A5QmYYm3CazWBa/zBTypX0jH1gWv8wU8qV9IbOqt7+Jvef0rhtnlQmYAmr1hWt8xV8qP6RgawrX/AOWKeVH9IT5qXv4m95/Sk+SvULGAJnNYVr/MVPKj+kazWHa3zFTyo/pB5qXv4m95/SjyV6hwAmE1i238xU8qP6Rgax7b+Yqf1z+kc80738Te8/pR5K9RCAS0aybb+Yqf1z+kajWZb/zFT+uf0g80738Te8/pR5K9RUASiazoD5ip/XP6Rua25ENumtoxPWdmfMb9wtmqV2T6T2gdp+SBau4pi2zAqSSybpylq2afZ9X9WglG32fCZJNX4tPjjazhXLn2XpaYczNsm2R1SQ1+i9F0tHUixmJOZ4qXTpimIC3gAAWacUX3zbj59patiYRRpRm3p/ELVOUtM1K1qQtMd9e0JQEcX3ouY3TJHl0pyWjpHOU5Dpr1MkQxS4UrQld34a05wtWcS8GNCRtx1ZSCaZOJJIqZTnw+UTrTf26VDgtqTGF7HyTmDh3cVX21J1GvUJbg8zMzuA6iMutO0AABtWCAAABCAAABCAAABCAAABCAAABCAAABCAAABCAAABCAYAABCMBjgAAEIwBgAAEIwBhQAAIXmrJ1gaonWAACF5qEuwoPKJJJ04iZaeAAAIW0AAAQgAAAQgAAAQgAAAQgAAAQgAAAQgAAAQgAAAQv/9k=" alt="Mutuelle de Poitiers Assurances" style="display:block;max-height:78px;width:auto"></span>
+    </div>
+    <p class="cover-eyebrow">Formation Intelligence Artificielle</p>
+    <h1 class="cover-title">Bienvenue</h1>
+    <p class="cover-sub">Une journée pour mettre l'IA au travail dans votre métier et dans votre agence.</p>
+    <p class="cover-meta">Saintes · sessions des 15 &amp; 25 juin 2026</p>
+    <a href="#app" class="cover-cta">Entrer dans le support →</a>
+    <p class="cover-foot">L'Rénov IA Studio — « L'intelligence artificielle sans perdre la vôtre. »</p>
+  </div>
+</section>
+
+<header class="hero" id="app">
+  <div class="hero-wrap">
+    <p class="eyebrow">Formation Intelligence Artificielle · Mutuelle de Poitiers · Saintes</p>
+    <h1>Votre support de travail</h1>
+    <p class="lede">Tout ce qu'on construit aujourd'hui, réuni ici. Gardez ce fichier ouvert sur votre PC : vous y copiez vos prompts d'un clic, pendant la journée et après.</p>
+    <p class="promesse">« Quelle IA pour quoi faire » — comprendre ce qu'on peut attendre de chaque IA, et à laquelle s'adresser.</p>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Sections du support">
+  <div class="tabs-wrap" role="tablist">
+    <button class="tab" role="tab" aria-selected="true"  aria-controls="p1" id="t1"><span class="num">01</span>Univers IA</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p2" id="t2"><span class="num">02</span>Personnaliser ses IA</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p3" id="t3"><span class="num">03</span>Assistant mail</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p4" id="t4"><span class="num">04</span>Comparateur</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p5" id="t5"><span class="num">05</span>RGPD &amp; données</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p6" id="t6"><span class="num">06</span>Réflexes</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p7" id="t7"><span class="num">07</span>Plan &amp; clôture</button>
+  </div>
+</nav>
+
+<main>
+  <!-- 01 -->
+  <section class="panel active" id="p1" role="tabpanel" aria-labelledby="t1">
+
+    <div class="panel-head">
+      <p class="kicker">01 — Comprendre les univers IA</p>
+      <h2>Quelle IA pour quoi faire</h2>
+      <p>Le fil rouge de la journée : comprendre ce que sait faire chaque IA, et vers laquelle aller selon votre besoin. Avant de produire, on pose le paysage — et on cadre ce qu'on construit aujourd'hui.</p>
+    </div>
+
+    <div class="card accent">
+      <h3>Le cadre du jour : des assistants internes</h3>
+      <p>Aujourd'hui, on ne crée pas d'« agents » qui se promènent dans votre ordinateur, lisent vos fichiers ou envoient des mails tout seuls. On construit des <strong>assistants internes</strong> : des IA cadrées à votre métier, votre ton et vos règles, qui vous aident à rédiger, reformuler, comparer et préparer vos réponses.</p>
+      <p class="muted">Ce que vous repartez maîtriser aujourd'hui est déjà un niveau professionnel complet — pas une étape avant « la vraie » formation.</p>
+    </div>
+
+    <div class="card">
+      <h3>Projet, assistant interne, agent connecté : ne pas confondre</h3>
+      <p>Un <strong>projet</strong> (ou assistant interne) est un espace de travail dans ChatGPT, Claude, Gemini ou une autre IA. Il contient un objectif, des instructions, des règles de ton, des fichiers sources, des exemples et des garde-fous.</p>
+      <ul class="clean">
+        <li>Il fonctionne <strong>à l'intérieur</strong> de l'IA choisie.</li>
+        <li>Il ne se promène pas dans votre ordinateur.</li>
+        <li>Il ne lit pas vos mails tout seul.</li>
+        <li>Il n'envoie rien à votre place.</li>
+        <li>Il ne déclenche aucune action automatique.</li>
+      </ul>
+      <p class="muted" style="margin-top:10px">Les <strong>agents connectés</strong>, connecteurs et automatisations capables d'agir dans plusieurs applications ou de manipuler des fichiers seuls relèvent d'un niveau supérieur — et d'une autre formation.</p>
+    </div>
+
+    <div class="card">
+      <h3>Votre radar IA — qui fait quoi</h3>
+      <p class="muted">Aucune IA n'est « la meilleure » dans l'absolu. On regarde leurs forces, et on sait vers laquelle aller.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>IA</th><th>Là où elle est forte</th><th>Quand l'utiliser</th></tr></thead>
+          <tbody>
+            <tr><td class="ia">ChatGPT</td><td>Polyvalent : structuration, rédaction, organisation, projets et assistants personnalisés.</td><td>Votre couteau suisse au quotidien.</td></tr>
+            <tr><td class="ia">Claude</td><td>Textes longs, ton juste, reformulation, documents structurés, finesse rédactionnelle.</td><td>Quand le rendu rédactionnel compte.</td></tr>
+            <tr><td class="ia">Gemini</td><td>Écosystème Google : Gmail, Docs, Drive, Workspace, recherche et synthèse.</td><td>Si vous travaillez déjà dans Google.</td></tr>
+            <tr><td class="ia">Perplexity</td><td>Moteur de recherche augmenté : chercher, sourcer, comparer des informations.</td><td>Pour la recherche et la veille sourcée.</td></tr>
+            <tr><td class="ia">Mistral</td><td>Alternative européenne, efficace et directe.</td><td>Usages professionnels encadrés, si votre organisation l'autorise — avec anonymisation systématique (onglet 05).</td></tr>
+            <tr><td class="ia">NotebookLM</td><td>Travail sur corpus documentaire : PDF, supports, notes, documents fournis.</td><td>Pour interroger un ensemble de documents.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note"><b>Mémo :</b> ChatGPT organise, Claude affine, Gemini s'intègre à Google, Perplexity cherche et source, Mistral offre une alternative européenne, NotebookLM travaille sur vos documents.</div>
+      <p style="margin-top:12px"><a href="https://panoramaproia2026.netlify.app/" target="_blank" rel="noopener" style="display:inline-block;background:var(--bleu);color:#fff;text-decoration:none;font-family:var(--display);font-weight:600;font-size:.85rem;padding:9px 18px;border-radius:8px">Ouvrir le Panorama IA Pro 2026 ↗</a></p>
+      <p class="muted" style="margin-top:8px">Le comparatif détaillé des 4 leaders (ChatGPT, Claude, Gemini, Mistral) sur 8 dimensions, avec calculateur de rentabilité — mis à jour chaque mois.</p>
+    </div>
+
+    <div class="card accent">
+      <h3>Les 6 niveaux d'usage de l'IA</h3>
+      <p class="muted">Pour situer ce qu'on fait — et ce qui viendra peut-être plus tard.</p>
+      <ul class="clean">
+        <li><strong>1 · Conversation simple</strong> — vous discutez avec l'IA.</li>
+        <li><strong>2 · Demande métier</strong> — une consigne précise, adaptée à votre activité.</li>
+        <li><strong>3 · Projet / assistant interne</strong> — un espace cadré avec instructions et garde-fous.</li>
+        <li><strong>4 · Espace projet avec fichiers</strong> — votre assistant s'appuie sur vos documents.</li>
+        <li><strong>5 · Agent connecté</strong> — l'IA agit dans vos applications.</li>
+        <li><strong>6 · Automatisation avancée</strong> — des chaînes qui tournent toutes seules.</li>
+      </ul>
+      <p class="muted" style="margin-top:10px">La journée d'aujourd'hui couvre surtout les <strong>niveaux 1 à 4</strong>. Les niveaux 5 et 6 sont évoqués, mais ne sont pas l'objet de la journée.</p>
+    </div>
+
+    <div class="card accent">
+      <h3>Ce que vous repartez avec</h3>
+      <ul class="clean">
+        <li><strong>Vos IA personnalisées</strong> — configurées à votre métier.</li>
+        <li><strong>Votre assistant mail</strong> — un projet que vous construisez et gardez.</li>
+        <li><strong>Votre comparateur</strong> — pour présenter garanties et devis de façon lisible.</li>
+        <li><strong>Vos premières productions</strong> — courriers, synthèses, reformulations.</li>
+        <li><strong>Un plan d'action</strong> — quoi faire dans les 7 puis 30 prochains jours.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Le déroulé de la journée</h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Horaire</th><th>Séquence</th></tr></thead>
+          <tbody>
+            <tr><td class="ia">9 h 00</td><td>Accueil &amp; tour de table</td></tr>
+            <tr><td class="ia">9 h 15</td><td>Comprendre les univers IA — quelle IA pour quoi faire</td></tr>
+            <tr><td class="ia">9 h 45</td><td>Personnaliser ses IA (préparer son profil, le GPT-MIROIR)</td></tr>
+            <tr><td class="ia">10 h 30</td><td>Pause</td></tr>
+            <tr><td class="ia">10 h 45</td><td>Construire son assistant mail — ateliers</td></tr>
+            <tr><td class="ia">12 h 00</td><td>Déjeuner</td></tr>
+            <tr><td class="ia">13 h 30</td><td>Construire son comparateur — atelier en 2 passes</td></tr>
+            <tr><td class="ia">15 h 00</td><td>Pause</td></tr>
+            <tr><td class="ia">15 h 15</td><td>RGPD &amp; données sensibles</td></tr>
+            <tr><td class="ia">15 h 55</td><td>Vos cas concrets métier</td></tr>
+            <tr><td class="ia">16 h 45</td><td>Plan d'action &amp; clôture</td></tr>
+            <tr><td class="ia">17 h 30</td><td>Fin de journée</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>Vos prérequis du jour :</b> un ordinateur portable, et la version payante d'au moins une IA (ChatGPT Plus, Gemini ou Claude payant — environ 20 €, sans engagement). C'est ce qui débloque la personnalisation et les outils qu'on construit dans la journée.
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="panel" id="p2" role="tabpanel" aria-labelledby="t2">
+    <div class="panel-head">
+      <p class="kicker">02 — Personnaliser ses IA</p>
+      <h2>Votre IA ne sait que ce que vous lui dites</h2>
+      <p>On la calibre une seule fois, sur l'IA que vous payez. Objectif : un profil clair, prêt à coller dans les réglages de chaque IA — pour qu'elle réponde à votre métier, votre ton et vos règles.</p>
+    </div>
+
+    <div class="card accent">
+      <h3>La méthode en trois temps</h3>
+      <ul class="clean">
+        <li><strong>1 · Préparez votre profil</strong> — par la porte qui correspond à votre IA (ci-dessous).</li>
+        <li><strong>2 · Récupérez vos réglages</strong> — un profil clair, prêt à coller.</li>
+        <li><strong>3 · Collez-les</strong> dans les réglages de chaque IA.</li>
+      </ul>
+      <p class="muted" style="margin-top:12px">On prépare <strong>une seule fois</strong>, sur l'IA que vous avez déjà payée.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="step">PORTE A</span>Le GPT-MIROIR — si vous avez ChatGPT</h3>
+      <p>Ouvrez le GPT-MIROIR, répondez à ses questions, validez le résumé : il vous prépare vos réglages, IA par IA.</p>
+      <p style="margin-top:10px"><a href="https://chatgpt.com/g/g-69c2d05bfe20819180177b61a2bee43c-gpt-miroirtm-signature-ia-universelle" target="_blank" rel="noopener" style="display:inline-block;background:var(--bleu);color:#fff;text-decoration:none;font-family:var(--display);font-weight:600;font-size:.85rem;padding:9px 18px;border-radius:8px">Ouvrir le GPT-MIROIR ↗</a></p>
+      <p class="muted" style="margin-top:10px">Le GPT-MIROIR fonctionne dans ChatGPT. Selon votre compte et vos limites d'usage, l'accès peut varier. Si vous utilisez surtout Claude, Gemini ou Mistral, passez par la Porte B.</p>
+    </div>
+
+    <div class="card accent">
+      <h3><span class="step">PORTE B</span>Préparer votre profil avec votre IA</h3>
+      <p class="muted">Vous payez Claude, Gemini ou Mistral ? Demandez à votre IA de vous aider à rédiger votre profil professionnel. Vous obtenez un profil clair, à coller ensuite dans le GPT-MIROIR ou directement dans les réglages de votre IA.</p>
+      <div class="prompt">
+        <div class="prompt-bar">
+          <span class="label">Consigne à copier dans votre IA</span>
+          <button class="copy-btn" type="button">Copier</button>
+        </div>
+        <pre>À partir de tout ce que tu sais de moi, de nos échanges, de mes usages, de mes demandes récurrentes et de ma manière de travailler, prépare-moi un profil professionnel réutilisable pour personnaliser mes autres IA.
+
+Je veux un profil structuré pour développer mes réglages dans ChatGPT, Claude, Gemini, Mistral ou une autre IA.
+
+Distingue clairement :
+1. ce que tu sais vraiment de moi
+2. ce que tu supposes mais qui doit être validé
+3. mes usages les plus fréquents
+4. mon style de communication
+5. les formats de réponse qui me conviennent
+6. les sujets où tu dois être prudent
+7. les informations que tu ne dois jamais inventer
+8. les règles utiles pour mieux travailler avec moi
+
+Si tu ne sais pas, écris « non connu ». N'invente rien. Ne me flatte pas.
+Termine par 5 questions utiles pour compléter mon profil.</pre>
+      </div>
+      <p class="muted" style="margin-top:12px"><strong>Si votre IA ne vous connaît pas encore</strong> (compte neuf, sans historique) : demandez-lui d'abord de vous interviewer — « Pose-moi les questions utiles, une par une, pour cerner mon métier, ma cible, mes usages, mon ton et ce que tu dois éviter » — puis relancez la consigne ci-dessus.</p>
+    </div>
+
+    <div class="card">
+      <h3>Où coller votre profil, une fois prêt</h3>
+      <ul class="clean">
+        <li><strong>ChatGPT</strong> — Réglages › <em>Personnalisation</em>.</li>
+        <li><strong>Claude</strong> — Réglages › Général › <em>Préférences personnelles</em>.</li>
+        <li><strong>Gemini</strong> — <em>Instructions</em> › bouton « + Ajouter ».</li>
+        <li><strong>Autre IA, dont Mistral</strong> — en tête de conversation, dans un <em>projet</em>, ou dans un <em>assistant interne</em> si l'outil le permet.</li>
+      </ul>
+    </div>
+
+    <div class="note">
+      <b>Bon à savoir :</b> pour Mistral et toute IA sans réglages dédiés, votre profil se colle en début de conversation, dans un projet ou un assistant interne. Sur le volet données, voir l'onglet 05.
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="panel" id="p3" role="tabpanel" aria-labelledby="t3">
+    <div class="panel-head">
+      <p class="kicker">03 — Construire son Assistant Mail</p>
+      <h2>Vous construisez votre propre assistant mail</h2>
+      <p>L'atelier le plus rentable de la journée. Vous ne recevez pas un outil tout fait : vous apprenez à demander à votre IA de construire <strong>votre</strong> projet Assistant Mail, dans votre écosystème, à votre métier.</p>
+    </div>
+
+    <div class="card accent">
+      <h3>Une bonne demande en 5 points</h3>
+      <p class="muted">La méthode pour formuler vos propres demandes — pas seulement copier les nôtres.</p>
+      <ul class="clean">
+        <li><strong>1 · Contexte</strong> — je suis… / je dois répondre à…</li>
+        <li><strong>2 · Objectif</strong> — je veux obtenir…</li>
+        <li><strong>3 · Contraintes</strong> — ne pas inventer / ne pas conclure / respecter…</li>
+        <li><strong>4 · Format</strong> — mail / tableau / synthèse / liste</li>
+        <li><strong>5 · Données</strong> — voici les éléments anonymisés</li>
+      </ul>
+    </div>
+
+    <div class="card accent">
+      <h3>Construire mon projet Assistant Mail</h3>
+      <p class="muted">Demandez à votre IA de construire le projet avec vous. Collez cette consigne :</p>
+      <div class="prompt">
+        <div class="prompt-bar">
+          <span class="label">Consigne à copier dans votre IA</span>
+          <button class="copy-btn" type="button">Copier</button>
+        </div>
+        <pre>Je veux créer un projet ou assistant interne pour m'aider à rédiger mes mails professionnels.
+
+Aide-moi à construire ce projet étape par étape. Je veux que tu me fournisses :
+- les instructions à mettre dans mon projet
+- les règles de ton et de prudence (garde-fous)
+- les fichiers sources utiles
+- une méthode d'utilisation simple
+- un test de validation
+
+Avant de rédiger les instructions finales, pose-moi les questions indispensables pour adapter ce projet à mon métier.</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Résultat attendu</h3>
+      <ul class="clean">
+        <li>Un projet où vous collez le mail reçu, et la réponse sort rédigée à votre ton.</li>
+        <li>Des <strong>fichiers sources</strong> à créer ou ajouter : votre signature, vos formules types, vos garde-fous métier.</li>
+        <li>Des règles claires : ne jamais inventer un montant ou une garantie, ne pas conclure qu'un client est couvert sans les conditions du contrat.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>À vérifier — testez votre projet</h3>
+      <ul class="clean">
+        <li><strong>Test 1 — mail simple :</strong> un mail courant, anonymisé. La réponse est-elle prête à envoyer ?</li>
+        <li><strong>Test 2 — mail sensible :</strong> un mail plus tendu. Votre assistant reste-t-il prudent, sans rien promettre ?</li>
+      </ul>
+    </div>
+
+    <div class="note">
+      <b>Rappel RGPD :</b> on ne colle <b>jamais</b> de donnée nominative sensible dans une IA grand public. On anonymise d'abord — voir l'onglet 05. Et vous relisez toujours avant d'envoyer.
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="panel" id="p4" role="tabpanel" aria-labelledby="t4">
+    <div class="panel-head">
+      <p class="kicker">04 — Construire son Comparateur</p>
+      <h2>Vous construisez votre comparateur</h2>
+      <p>Le cœur de l'après-midi : un projet capable de comparer garanties, devis, contrats ou propositions, et de présenter une comparaison claire au client. Vous le construisez, vous le gardez.</p>
+    </div>
+
+    <div class="card accent">
+      <h3>Construire mon projet Comparateur</h3>
+      <p class="muted">Demandez à votre IA de construire le projet avec vous. Collez cette consigne :</p>
+      <div class="prompt">
+        <div class="prompt-bar">
+          <span class="label">Consigne à copier dans votre IA</span>
+          <button class="copy-btn" type="button">Copier</button>
+        </div>
+        <pre>Je veux créer un projet ou assistant interne pour comparer des garanties, contrats, devis ou propositions d'assurance.
+
+Aide-moi à construire ce projet étape par étape. Je veux que tu me fournisses :
+- les instructions à mettre dans mon projet
+- les règles de comparaison
+- les fichiers sources utiles
+- un modèle de tableau de sortie
+- une méthode d'utilisation
+- un test avec données fictives
+
+Avant de rédiger les instructions finales, pose-moi les questions indispensables pour adapter ce projet aux types de contrats que je traite.</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Les règles à fixer dans votre comparateur</h3>
+      <ul class="clean">
+        <li>Ne pas inventer de garantie absente des éléments fournis.</li>
+        <li>Ne pas conclure à une prise en charge sans éléments contractuels.</li>
+        <li>Distinguer garanties, exclusions, franchises, plafonds, délais et points de vigilance.</li>
+        <li>Rester neutre, ne pas trancher à votre place.</li>
+        <li>Signaler les informations absentes ou ambiguës.</li>
+        <li>Ne traiter que des documents anonymisés.</li>
+      </ul>
+      <p class="muted" style="margin-top:10px">Modèle de sortie conseillé : un tableau <em>critère / option A / option B / différence concrète pour le client / point à vérifier</em>, suivi d'une synthèse en 3 phrases et d'une rubrique « Points à valider avant présentation au client ».</p>
+    </div>
+
+    <div class="card accent">
+      <h3>Vos fichiers d'exercice à télécharger</h3>
+      <p class="muted">Cas fictifs — aucune donnée réelle. Téléchargez une paire, donnez-la à votre comparateur, et testez l'extraction puis la comparaison.</p>
+      <p style="margin:14px 0 6px;font-family:var(--display);font-weight:700;color:var(--bleu-fonce);font-size:.92rem">Dossier Auto</p>
+      <div class="dl-grid">
+        <a class="dl-btn" href="01_AUTO_concurrent_tous_risques_fictif.pdf" download><span class="ic">PDF</span>Devis concurrent auto</a>
+        <a class="dl-btn" href="02_AUTO_mutuelle_poitiers_deux_formules_fictif.pdf" download><span class="ic">PDF</span>Proposition Mutuelle auto</a>
+      </div>
+      <p style="margin:16px 0 6px;font-family:var(--display);font-weight:700;color:var(--bleu-fonce);font-size:.92rem">Dossier Habitation</p>
+      <div class="dl-grid">
+        <a class="dl-btn" href="03_HABITATION_concurrent_formule_unique_fictif.pdf" download><span class="ic">PDF</span>Devis concurrent habitation</a>
+        <a class="dl-btn" href="04_HABITATION_mutuelle_poitiers_deux_niveaux_fictif.pdf" download><span class="ic">PDF</span>Proposition Mutuelle habitation</a>
+      </div>
+      <p style="margin:16px 0 6px;font-family:var(--display);font-weight:700;color:var(--bleu-fonce);font-size:.92rem">Dossier GAV — protection du quotidien</p>
+      <div class="dl-grid">
+        <a class="dl-btn" href="05_GAV_concurrent_fictif.pdf" download><span class="ic">PDF</span>Devis concurrent GAV</a>
+        <a class="dl-btn" href="06_GAV_mutuelle_poitiers_trois_niveaux_fictif.pdf" download><span class="ic">PDF</span>Proposition Mutuelle GAV</a>
+      </div>
+    </div>
+
+    <div class="card accent">
+      <h3>L'atelier en 2 passes</h3>
+      <p><strong>Passe 1 — cas fictif commun.</strong> Tout le monde part des mêmes PDF fictifs. Objectif : apprendre la méthode, comparer les résultats, vérifier que l'IA lit bien les documents.</p>
+      <p><strong>Passe 2 — cas réel.</strong> Chacun peut utiliser son propre contrat personnel, ou un document professionnel <strong>uniquement après anonymisation</strong>. Pour un document client, passez-le d'abord au vérificateur RGPD (onglet 05).</p>
+      <p class="muted">Si vous utilisez un document client, vous devez d'abord retirer ou masquer toutes les données personnelles.</p>
+    </div>
+
+    <div class="note">
+      <b>Votre rôle ne change pas :</b> l'IA structure et compare, <b>vous</b> validez la garantie, le conseil et la présentation au client.
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section class="panel" id="p5" role="tabpanel" aria-labelledby="t5">
+    <div class="panel-head">
+      <p class="kicker">05 — RGPD &amp; données</p>
+      <h2>L'IA sans perdre vos données</h2>
+      <p>En assurance, vous manipulez des données sensibles et vous êtes tenus au secret professionnel. L'IA est un formidable outil de rédaction — à condition de ne jamais lui livrer ce qui identifie un client.</p>
+    </div>
+
+    <div class="card accent">
+      <h3>La règle d'or</h3>
+      <p>On ne colle <strong>jamais</strong> dans une IA grand public ce qui permet d'identifier une personne ou de la mettre en cause :</p>
+      <ul class="clean">
+        <li>Nom, prénom, adresse, date de naissance, téléphone, e-mail réel</li>
+        <li>Numéro de sécurité sociale, de contrat, de sinistre</li>
+        <li>RIB / IBAN, montants nominatifs reliés à une personne</li>
+        <li>Toute donnée de santé (arrêts, pathologies, expertises médicales)</li>
+      </ul>
+    </div>
+
+    <div class="card accent">
+      <h3>Avant de faire travailler l'IA sur un document client, je vérifie ce que je dois masquer</h3>
+      <p class="muted">La check-list à passer en revue avant de coller quoi que ce soit :</p>
+      <ul class="clean">
+        <li>Nom · prénom</li>
+        <li>Adresse</li>
+        <li>Date de naissance</li>
+        <li>Téléphone · e-mail</li>
+        <li>Numéro de contrat</li>
+        <li>Numéro de sinistre</li>
+        <li>Immatriculation</li>
+        <li>RIB / IBAN</li>
+        <li>Donnée de santé</li>
+        <li>Tout élément permettant d'identifier la personne</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Le bon réflexe : anonymiser</h3>
+      <p>Avant de coller, remplacez l'identifiant par un repère neutre. L'IA travaille tout aussi bien.</p>
+      <ul class="clean">
+        <li>« M. Dupont, né le… » → <strong>[CLIENT]</strong></li>
+        <li>« contrat n° 4471-… » → <strong>[N° CONTRAT]</strong></li>
+        <li>« 1 240 € de cotisation » → <strong>[MONTANT]</strong> si c'est relié à la personne</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Contrat personnel ou document client : ce n'est pas le même statut</h3>
+      <p>Un contrat personnel que vous choisissez d'utiliser pour vous-même n'a pas le même statut qu'un document client. <strong>Un document client doit être anonymisé.</strong></p>
+    </div>
+
+    <div class="card accent">
+      <h3>Pour les usages sensibles</h3>
+      <p>Privilégiez une solution européenne ou validée par votre organisation — comme <strong>Mistral</strong>, si elle est autorisée dans votre cadre professionnel. Cela ne dispense <strong>jamais</strong> d'anonymiser les données, ni de respecter la politique interne de votre mandant.</p>
+    </div>
+
+    <div class="card accent">
+      <h3>Créer un projet Anonymisateur</h3>
+      <p>Pour les dossiers longs ou complexes (plusieurs contrats, conditions, courriers, sinistres), repérer les données une par une ne suffit plus. Vous pouvez créer un <strong>projet dédié à l'anonymisation</strong> : un assistant interne qui transforme un document en version de travail exploitable, sans données identifiantes.</p>
+      <p class="muted"><strong>Si votre organisation vous y autorise</strong>, ce projet peut être construit dans Mistral ou dans une solution européenne validée. Il ne remplace <strong>jamais</strong> la politique interne de votre mandant ni la validation humaine.</p>
+      <p style="margin:6px 0 0">Ce que l'anonymisateur doit faire :</p>
+      <ul class="clean">
+        <li>Repérer les données personnelles et les données sensibles.</li>
+        <li>Remplacer les éléments identifiants par des balises neutres.</li>
+        <li>Conserver le sens métier et juridique — <strong>sans résumer</strong>.</li>
+        <li>Signaler les zones ambiguës.</li>
+        <li>Produire une version anonymisée prête à passer dans un autre assistant.</li>
+      </ul>
+      <p class="muted" style="margin-top:10px">Un anonymisateur ne sert pas à « cacher vite fait » : il produit une version de travail propre, relisible et sécurisée.</p>
+    </div>
+
+    <div class="card accent">
+      <h3>Construire mon projet Anonymisateur</h3>
+      <p class="muted">Demandez à votre IA de construire le projet avec vous. Collez cette consigne :</p>
+      <div class="prompt">
+        <div class="prompt-bar">
+          <span class="label">Consigne à copier dans votre IA</span>
+          <button class="copy-btn" type="button">Copier</button>
+        </div>
+        <pre>Je veux créer un projet ou assistant interne d'anonymisation de documents.
+
+Aide-moi à construire ce projet étape par étape.
+
+Objectif : transformer des documents professionnels en versions anonymisées, tout en conservant le sens métier, juridique et opérationnel du document.
+
+Le projet devra :
+- repérer les données personnelles
+- repérer les données sensibles
+- remplacer les éléments identifiants par des balises neutres
+- conserver la structure du document
+- ne pas résumer
+- ne pas modifier le fond
+- signaler les passages ambigus
+- produire une version anonymisée exploitable dans une autre IA
+
+Balises attendues :
+[CLIENT], [ADRESSE], [DATE_NAISSANCE], [TELEPHONE], [EMAIL], [CONTRAT], [SINISTRE], [IMMATRICULATION], [MONTANT], [RIB], [SANTE], [DATE], [LIEU], [TIERS]
+
+Avant de rédiger les instructions finales, pose-moi les questions indispensables pour l'adapter à mon métier, aux documents que je traite et au niveau de prudence attendu.</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>À vérifier — testez votre anonymisateur</h3>
+      <p class="muted">Sur un document <strong>fictif</strong>, jamais un vrai dossier client.</p>
+      <ul class="clean">
+        <li>Prenez un court document fictif avec nom, adresse, contrat, sinistre, montant et immatriculation.</li>
+        <li>Faites produire une version anonymisée.</li>
+        <li>Vérifiez que le sens du document est conservé.</li>
+        <li>Vérifiez qu'aucune donnée identifiable ne reste.</li>
+        <li>Utilisez ensuite cette version dans votre assistant mail ou votre comparateur.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Je colle / je ne colle jamais</h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Je peux coller</th><th>Je ne colle jamais</th></tr></thead>
+          <tbody>
+            <tr><td>Un mail anonymisé</td><td>Nom + prénom du client</td></tr>
+            <tr><td>Une situation décrite de façon générale</td><td>Numéro de contrat</td></tr>
+            <tr><td>Une garantie copiée sans identité</td><td>Dossier de sinistre nominatif</td></tr>
+            <tr><td>Un brouillon sans données sensibles</td><td>Toute donnée de santé</td></tr>
+            <tr><td>Des montants non reliés à une personne</td><td>RIB / IBAN / n° de sécurité sociale</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted" style="margin-top:12px">La bonne question avant de coller : <strong>si quelqu'un lit ce texte, peut-il reconnaître le client ?</strong> Si oui, je masque.</p>
+    </div>
+
+    <div class="card accent">
+      <h3>Le vérificateur RGPD — avant de coller</h3>
+      <p class="muted">Un doute sur un texte ? Faites-le contrôler avant de l'envoyer dans une IA.</p>
+      <div class="prompt">
+        <div class="prompt-bar">
+          <span class="label">Consigne à copier dans votre IA</span>
+          <button class="copy-btn" type="button">Copier</button>
+        </div>
+        <pre>Analyse le texte ci-dessous avant que je le colle dans une IA.
+
+Objectif :
+- repérer les données personnelles et les données sensibles
+- me proposer une version anonymisée
+- conserver le sens professionnel du message
+
+Règles :
+- ne résume pas, ne modifie pas le fond
+- remplace les éléments identifiants par des balises neutres : [CLIENT], [ADRESSE], [CONTRAT], [SINISTRE], [MONTANT], [DATE]
+
+Texte à contrôler :
+[COLLEZ LE TEXTE ICI]</pre>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>Lien avec l'atelier comparateur :</b> avant la passe 2 sur vos données, repassez chaque document client par ce vérificateur. C'est le réflexe qui sécurise tout le reste.
+    </div>
+
+    <div class="note">
+      <b>À garder en tête :</b> ces règles sont du bon usage. Pour ce qui touche à votre responsabilité d'agent, référez-vous à la politique de votre mandant et à votre référent conformité.
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section class="panel" id="p6" role="tabpanel" aria-labelledby="t6">
+    <div class="panel-head">
+      <p class="kicker">06 — Réflexes IA</p>
+      <h2>Les réflexes IA à garder</h2>
+      <p>Les automatismes qui font la différence au quotidien. Gardez-les sous la main — ils sont aussi dans votre cockpit de suivi, à cocher au fil des semaines.</p>
+    </div>
+
+    <div class="card accent">
+      <h3>Les 10 réflexes IA</h3>
+      <p class="muted">Une phrase à copier pour chacun. C'est en les répétant qu'ils deviennent automatiques.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Réflexe</th><th>La phrase à copier</th></tr></thead>
+          <tbody>
+            <tr><td class="ia">1 · Donner le contexte</td><td>« Contexte : je suis…, je dois répondre à…, objectif…, contraintes… »</td></tr>
+            <tr><td class="ia">2 · Demander un format</td><td>« Réponds sous forme de mail / tableau / synthèse / procédure. »</td></tr>
+            <tr><td class="ia">3 · Faire améliorer</td><td>« Améliore ta réponse : plus claire, plus utile, moins bavarde. »</td></tr>
+            <tr><td class="ia">4 · Auto-contrôle qualité</td><td>« Relis ta réponse comme un contrôleur qualité. »</td></tr>
+            <tr><td class="ia">5 · Contrôle croisé (autre IA)</td><td>« Analyse cette réponse objectivement : forces, limites, risques, amélioration. »</td></tr>
+            <tr><td class="ia">6 · Vérifier fraîcheur / sources</td><td>« Cette information peut-elle avoir changé récemment ? Que faut-il vérifier ? »</td></tr>
+            <tr><td class="ia">7 · Séparer faits / hypothèses</td><td>« Distingue faits certains, hypothèses, infos absentes, points à vérifier. »</td></tr>
+            <tr><td class="ia">8 · Anonymiser</td><td>« Repère les données personnelles et propose une version anonymisée. »</td></tr>
+            <tr><td class="ia">9 · Version client simple</td><td>« Transforme cette analyse en version client simple, sans jargon. »</td></tr>
+            <tr><td class="ia">10 · Capitaliser</td><td>« Transforme ce prompt qui fonctionne en projet / assistant interne réutilisable. »</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note"><b>Le n°4 et le n°5 ne sont pas la même chose :</b> le n°4 fait relire l'IA par <b>elle-même</b> ; le n°5 est un <b>contrôle croisé</b> par une <b>autre</b> IA. Cumulez les deux sur un mail ou un conseil sensible.</div>
+    </div>
+
+    <div class="card accent">
+      <h3>Réflexe détaillé : l'auto-contrôle qualité</h3>
+      <p class="muted">Avant d'envoyer, demandez à l'IA de contrôler sa propre réponse.</p>
+      <div class="prompt">
+        <div class="prompt-bar">
+          <span class="label">Consigne à copier dans votre IA</span>
+          <button class="copy-btn" type="button">Copier</button>
+        </div>
+        <pre>Relis ta réponse comme un contrôleur qualité.
+
+Vérifie :
+- ce qui est affirmé sans preuve
+- ce qui pourrait être juridiquement risqué
+- ce qui pourrait engager l'agence ou la Mutuelle
+- les informations manquantes
+- les formulations trop catégoriques
+
+Puis propose une version plus prudente, prête à envoyer.</pre>
+      </div>
+    </div>
+
+    <div class="card accent">
+      <h3>Réflexe détaillé : synthétiser un document</h3>
+      <p class="muted">Pour dégrossir un texte long, sans données personnelles.</p>
+      <div class="prompt">
+        <div class="prompt-bar">
+          <span class="label">Consigne à copier dans votre IA</span>
+          <button class="copy-btn" type="button">Copier</button>
+        </div>
+        <pre>Résume-moi ce texte en 5 points clés, en langage simple.
+
+Structure ta réponse ainsi :
+1. Ce qu'il faut retenir
+2. Ce qui concerne directement le client
+3. Ce qui peut poser problème
+4. Points à vérifier avant utilisation
+5. Questions à poser si le dossier est incomplet
+
+Règles : n'invente rien, ne conclus pas à ma place, signale clairement les informations absentes ou ambiguës.
+
+Le texte :
+[COLLEZ LE TEXTE — sans données personnelles]</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Mettez-les en pratique sur votre métier</h3>
+      <ul class="clean">
+        <li>Reformuler un courrier difficile en restant ferme sur le fond, plus diplomate sur la forme.</li>
+        <li>Préparer un argumentaire clair pour présenter une garantie à un client.</li>
+        <li>Comparer deux de vos propres formules (anonymisées) avec votre comparateur.</li>
+        <li>Synthétiser des conditions générales pour en retenir l'essentiel.</li>
+      </ul>
+      <p class="muted" style="margin-top:10px">Pour tout document client : anonymisation d'abord (onglet 05), comparaison ou rédaction ensuite.</p>
+    </div>
+
+    <div class="note">
+      <b>À garder en tête :</b> vos résultats ne seront pas identiques à ceux du voisin, et c'est normal. Votre IA, vos documents, vos préférences et votre projet ne sont pas les mêmes. L'objectif n'est pas d'obtenir une réponse unique, mais de construire un outil fiable pour votre propre usage.
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section class="panel" id="p7" role="tabpanel" aria-labelledby="t7">
+    <div class="panel-head">
+      <p class="kicker">07 — Plan d'action &amp; clôture</p>
+      <h2>Faites-en une habitude</h2>
+      <p>Tout ce qu'on a construit aujourd'hui ne vaut que si ça entre dans votre quotidien. Voici comment passer du « vu en formation » au réflexe.</p>
+    </div>
+
+    <div class="card accent">
+      <h3>Votre kit de suivi à télécharger</h3>
+      <p>Un cockpit interactif pour les 30 prochains jours : <strong>J+7</strong>, <strong>J+30</strong> et les <strong>10 réflexes IA</strong>, à cocher et compléter. Il s'enregistre sur votre navigateur, et vous l'exportez pour le garder.</p>
+      <div class="dl-grid" style="grid-template-columns:1fr">
+        <a class="dl-btn" href="cockpit_suivi_IA_MutuelleDePoitiers.html" download><span class="ic">HTML</span>Ouvrir mon cockpit de suivi (J+7 / J+30 / 10 réflexes)</a>
+      </div>
+      <p class="muted" style="margin-top:12px"><strong>Pour garder une trace durable :</strong> dans le cockpit, utilisez <strong>Exporter (JSON)</strong> — un fichier que vous pourrez <strong>Réimporter</strong> pour tout retrouver — ou <strong>Imprimer / PDF</strong>. La sauvegarde navigateur est pratique, mais elle ne suit pas d'un PC à l'autre : rangez votre export dans votre Drive ou OneDrive.</p>
+    </div>
+
+    <div class="card accent">
+      <h3>Le secret, c'est la régularité</h3>
+      <p>Pour que l'IA devienne vraiment utile, il faut <strong>s'en servir tous les jours</strong> et en faire une routine. Comptez environ <strong>21 jours</strong> d'usage régulier pour qu'un geste devienne un réflexe.</p>
+      <p>Au début, vous aurez peut-être l'impression de <strong>perdre du temps</strong> — c'est normal, c'est le temps de l'apprentissage. Tenez bon : une fois le réflexe installé, vous <strong>gagnez sur toute la ligne</strong>, en rapidité, en clarté et en confort.</p>
+      <p class="muted">La règle simple : un petit usage chaque jour, plutôt qu'un grand effort de temps en temps.</p>
+    </div>
+
+    <div class="note" style="margin-top:18px">
+      Une envie d'aller plus loin pour votre agence ? On en parle quand vous voulez : <b>contact@lrenov-ia.studio</b>.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="sig">L'Rénov IA Studio</div>
+  <div class="promesse">« L'Intelligence Artificielle sans perdre la vôtre. »</div>
+  <div style="margin-top:8px"><a href="mailto:contact@lrenov-ia.studio">contact@lrenov-ia.studio</a></div>
+</footer>
+
+<script>
+  // Onglets
+  const tabs = Array.from(document.querySelectorAll('.tab'));
+  const panels = Array.from(document.querySelectorAll('.panel'));
+  function activate(i){
+    tabs.forEach((t,k)=>t.setAttribute('aria-selected', k===i ? 'true':'false'));
+    panels.forEach((p,k)=>p.classList.toggle('active', k===i));
+    tabs[i].scrollIntoView({inline:'nearest', block:'nearest'});
+  }
+  tabs.forEach((t,i)=>{
+    t.addEventListener('click', ()=>activate(i));
+    t.addEventListener('keydown', e=>{
+      if(e.key==='ArrowRight'){e.preventDefault();activate((i+1)%tabs.length);tabs[(i+1)%tabs.length].focus();}
+      if(e.key==='ArrowLeft'){e.preventDefault();activate((i-1+tabs.length)%tabs.length);tabs[(i-1+tabs.length)%tabs.length].focus();}
+    });
+  });
+
+  // Bouton copier
+  document.querySelectorAll('.copy-btn').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const pre = btn.closest('.prompt').querySelector('pre');
+      const text = pre.innerText;
+      try{
+        await navigator.clipboard.writeText(text);
+      }catch(err){
+        const r=document.createRange();r.selectNode(pre);
+        const s=window.getSelection();s.removeAllRanges();s.addRange(r);
+        try{document.execCommand('copy');}catch(e){}
+        s.removeAllRanges();
+      }
+      const old=btn.textContent;
+      btn.textContent='Copié ✓';btn.classList.add('ok');
+      setTimeout(()=>{btn.textContent=old;btn.classList.remove('ok');},1600);
+    });
+  });
+</script>
+</body>
+</html>

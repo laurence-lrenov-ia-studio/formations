@@ -1,0 +1,21 @@
+PACK PDF - Exercices comparateur assurance
+
+Tous les documents sont fictifs et crees pour la formation IA Mutuelle de Poitiers.
+Ils servent a tester :
+- la lecture de PDF par les IA ;
+- l extraction des garanties, franchises, plafonds et exclusions ;
+- la comparaison entre une proposition concurrente et une proposition Mutuelle de Poitiers fictive ;
+- la production d un argumentaire client.
+
+Consigne formation :
+1. Passe 1 : tout le monde utilise les PDF fictifs.
+2. Passe 2 : chacun utilise un document personnel ou un document client anonymise.
+
+Rappel a ajouter dans le bloc-notes formateur :
+Dans l email final, demander toujours une explication argumentee :
+- si notre offre est plus chere : expliquer ce qui justifie l ecart, sans forcer la vente ;
+- si notre offre est moins chere : expliquer pourquoi c est une opportunite, sans denigrer le concurrent ;
+- si les garanties ne sont pas equivalentes : le dire clairement ;
+- si une information manque : la placer dans "points a verifier" avant envoi.
+
+Attention : les montants, plafonds, garanties et franchises Mutuelle de Poitiers de ces documents sont fictifs. Ils ne doivent pas etre presentes comme des conditions reelles.
