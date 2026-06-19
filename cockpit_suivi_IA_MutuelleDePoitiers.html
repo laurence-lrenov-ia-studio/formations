@@ -129,6 +129,41 @@
   .cover-contact a{color:var(--vert);text-decoration:none;font-weight:600}
   .cover-foot{margin:32px 0 0;font-family:var(--display);font-style:italic;color:#7fa6c8;font-size:.84rem}
   @media print{#cover{display:none !important}}
+
+  /* ===== Onglet « Construire dans Claude » ===== */
+  .card.accent{border-left:3px solid var(--vert)}
+  ul.clean{margin:8px 0 0;padding:0;list-style:none}
+  ul.clean li{position:relative;padding:5px 0 5px 22px;color:var(--encre)}
+  ul.clean li::before{content:"";position:absolute;left:0;top:13px;width:8px;height:8px;border-radius:50%;border:2px solid var(--vert)}
+  .layers{display:grid;gap:14px;margin:6px 0}
+  .layer{background:var(--blanc);border:1px solid var(--trait);border-radius:14px;padding:18px 20px;box-shadow:0 1px 2px rgba(16,57,86,.04),0 6px 22px rgba(16,57,86,.06);position:relative;overflow:hidden}
+  .layer::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--bleu)}
+  .layer.l2::before{background:var(--bleu-fonce)}
+  .layer.l3::before{background:var(--vert)}
+  .layer-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+  .layer-ico{flex:0 0 auto;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;background:var(--creme);border:1px solid var(--trait)}
+  .layer h3{margin:0;font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--nuit)}
+  .layer .scope{font-family:var(--mono);font-size:.68rem;letter-spacing:.03em;text-transform:uppercase;color:var(--bleu);background:#eef6fc;border:1px solid var(--trait);padding:3px 9px;border-radius:20px;margin-left:auto}
+  .layer.l3 .scope{color:#4e7a1f;background:#f2f8e8}
+  .layer p{margin:4px 0 0;font-size:.93rem}
+  .layer .ex{margin-top:8px;font-size:.86rem;color:var(--gris);font-style:italic}
+  .flow{counter-reset:step;margin:6px 0}
+  .stepcard{background:var(--blanc);border:1px solid var(--trait);border-radius:14px;padding:20px 22px 20px 64px;margin:12px 0;box-shadow:0 1px 2px rgba(16,57,86,.04),0 6px 22px rgba(16,57,86,.06);position:relative}
+  .stepcard::before{counter-increment:step;content:counter(step);position:absolute;left:18px;top:20px;width:32px;height:32px;border-radius:9px;background:var(--bleu);color:#fff;font-family:var(--display);font-weight:800;font-size:1.02rem;display:flex;align-items:center;justify-content:center}
+  .stepcard h3{margin:0 0 6px;font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--bleu-fonce)}
+  .stepcard p{margin:0 0 8px;font-size:.94rem}
+  .stepcard p:last-child{margin-bottom:0}
+  .tag{display:inline-block;font-family:var(--mono);font-size:.7rem;color:var(--bleu);background:#eef6fc;border:1px solid var(--trait);padding:2px 9px;border-radius:20px;margin-bottom:8px}
+  .prompt{background:#f7fbfa;border:1px solid var(--trait);border-radius:12px;margin:14px 0 4px;overflow:hidden}
+  .prompt-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--nuit);color:#dceaf6;padding:9px 14px}
+  .prompt-bar .label{font-family:var(--display);font-weight:600;font-size:.78rem;letter-spacing:.04em;display:flex;align-items:center;gap:8px}
+  .prompt-bar .label::before{content:"";width:9px;height:9px;border-radius:2px;background:var(--vert);flex:0 0 auto}
+  .copy-btn{appearance:none;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;font-family:var(--body);font-weight:600;font-size:.76rem;cursor:pointer;padding:5px 13px;border-radius:7px;transition:background .15s,border-color .15s;white-space:nowrap}
+  .copy-btn:hover{background:var(--bleu);border-color:var(--bleu)}
+  .copy-btn.ok{background:var(--vert);border-color:var(--vert);color:var(--nuit)}
+  .prompt pre{margin:0;padding:16px 18px;font-family:var(--mono);font-size:.82rem;line-height:1.6;color:#243640;white-space:pre-wrap;word-break:break-word}
+  td.key{font-family:var(--display);font-weight:700;color:var(--nuit)}
+  @media print{.copy-btn{display:none}.layer,.stepcard,.prompt,.card{box-shadow:none!important;break-inside:avoid}}
 </style>
 </head>
 <body>
@@ -171,6 +206,7 @@
     <button class="tab" role="tab" aria-selected="true"  aria-controls="p1" id="t1"><span class="num">J+7</span>Première semaine</button>
     <button class="tab" role="tab" aria-selected="false" aria-controls="p2" id="t2"><span class="num">J+30</span>Bilan du mois</button>
     <button class="tab" role="tab" aria-selected="false" aria-controls="p3" id="t3"><span class="num">10</span>Réflexes IA</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p4" id="t4"><span class="num">+</span>Construire dans Claude</button>
   </div>
 </nav>
 
@@ -288,6 +324,182 @@
     </div>
   </section>
 
+  <!-- P4 — CONSTRUIRE DANS CLAUDE -->
+  <section class="panel" id="p4" role="tabpanel" aria-labelledby="t4">
+    <div class="panel-head">
+      <p class="kicker">＋ Bonus — construire dans Claude</p>
+      <h2>Construire dans Claude, sans vous perdre</h2>
+      <p>Le mode d'emploi de poche : les trois niveaux de Claude, le bon ordre pour construire, le geste pour créer un projet, et deux cas concrets de votre métier.</p>
+    </div>
+
+    <!-- Les 3 niveaux -->
+    <div class="card accent">
+      <h3>D'abord, les trois niveaux à ne pas confondre</h3>
+      <p class="muted">C'est LE point qui embrouille au début. Une fois clairs, vous ne vous perdez plus. Du plus large au plus ciblé :</p>
+    </div>
+
+    <div class="layers">
+      <div class="layer l1">
+        <div class="layer-top">
+          <span class="layer-ico">👤</span>
+          <h3>1 · Vos préférences personnelles</h3>
+          <span class="scope">Partout</span>
+        </div>
+        <p>Le « kit » qu'on a collé en formation (votre profil Miroir). Claude le lit dans <strong>toutes</strong> vos conversations, tout le temps. Vous vous présentez une bonne fois pour toutes.</p>
+        <p class="ex">Réglages › Profil › Préférences personnelles.</p>
+      </div>
+      <div class="layer l2">
+        <div class="layer-top">
+          <span class="layer-ico">📁</span>
+          <h3>2 · Un projet</h3>
+          <span class="scope">Dans ce projet</span>
+        </div>
+        <p>Un dossier dédié à un sujet : il contient des <strong>instructions</strong> et des <strong>fichiers</strong>. Claude ne les utilise que dans les conversations rangées <strong>dans ce projet</strong>. Idéal pour un thème récurrent : « mes mails clients », « mon comparateur ».</p>
+        <p class="ex">Menu Projets, à gauche de l'écran.</p>
+      </div>
+      <div class="layer l3">
+        <div class="layer-top">
+          <span class="layer-ico">🧩</span>
+          <h3>3 · Une compétence (skill)</h3>
+          <span class="scope">Quand c'est utile</span>
+        </div>
+        <p>Un savoir-faire réutilisable que Claude <strong>active de lui-même</strong> quand la tâche s'y prête. Vous le créez une fois, il sert quand le besoin revient — sans recoller un prompt.</p>
+        <p class="ex">Réglages › Capacités › Compétences.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>L'image simple :</b> les préférences, c'est <b>votre carte d'identité</b> (partout). Le projet, c'est <b>un classeur</b> (un sujet, ses documents). La compétence, c'est <b>un réflexe</b> que Claude ressort tout seul au bon moment.
+    </div>
+
+    <!-- Le bon ordre -->
+    <div class="card accent" style="margin-top:22px">
+      <h3>Le bon ordre : on parle d'abord, on range ensuite</h3>
+      <p class="muted">L'erreur classique : vouloir tout cadrer dès la première phrase. La bonne méthode fait l'inverse.</p>
+    </div>
+
+    <div class="flow">
+      <div class="stepcard">
+        <span class="tag">Chat classique</span>
+        <h3>Discuter, jusqu'à ce que ça vous convienne</h3>
+        <p>Ouvrez une conversation normale et expliquez ce que vous voulez. Laissez Claude proposer, ajustez, recommencez. On ne range rien tant que le résultat ne vous plaît pas.</p>
+      </div>
+      <div class="stepcard">
+        <span class="tag">Optionnel</span>
+        <h3>En faire une compétence, pour réutiliser</h3>
+        <p>Si le besoin reviendra, demandez à Claude de la <strong>générer</strong>. Il la produit <strong>prête à enregistrer</strong> dans le chat : il ne reste qu'à cliquer sur <strong>Enregistrer la compétence</strong>. Rien à coller. Ensuite Claude la ressort tout seul.</p>
+        <div class="prompt">
+          <div class="prompt-bar">
+            <span class="label">À demander à Claude</span>
+            <button class="copy-btn" type="button">Copier</button>
+          </div>
+          <pre>À partir de ce qu'on vient de construire, génère-moi une compétence (skill) prête à enregistrer, que je n'aie plus qu'à enregistrer en un clic.</pre>
+        </div>
+      </div>
+      <div class="stepcard">
+        <span class="tag">Optionnel</span>
+        <h3>En faire un projet, pour le garder rangé</h3>
+        <p>Pour un espace durable dédié à ce sujet, demandez à Claude — <strong>à la suite de la même conversation</strong> — de générer les instructions du projet. Il connaît déjà tout le contexte.</p>
+        <div class="prompt">
+          <div class="prompt-bar">
+            <span class="label">À demander à Claude</span>
+            <button class="copy-btn" type="button">Copier</button>
+          </div>
+          <pre>On va transformer ce travail en projet Claude.
+Rédige-moi les « instructions du projet » à coller : qui je suis, ce que ce projet doit faire, comment tu dois répondre, ce que tu dois éviter.
+Dis-moi aussi quels fichiers j'ai intérêt à y déposer.</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Créer le projet -->
+    <div class="card accent" style="margin-top:22px">
+      <h3>Monter le projet et y ranger votre conversation</h3>
+      <p class="muted">Quatre gestes, dans cet ordre.</p>
+    </div>
+
+    <div class="flow">
+      <div class="stepcard">
+        <h3>Créer le projet</h3>
+        <p>Menu de gauche › <strong>Projets</strong> › <strong>+ Nouveau projet</strong>. Donnez-lui un nom (ex. « Mes mails clients »).</p>
+      </div>
+      <div class="stepcard">
+        <h3>Coller les instructions</h3>
+        <p>Dans le projet, ouvrez <strong>Instructions du projet</strong> et collez le texte préparé par Claude. Enregistrez.</p>
+      </div>
+      <div class="stepcard">
+        <h3>Déposer vos fichiers sources</h3>
+        <p>S'il y en a (un modèle de courrier, une trame, un exemple…), ajoutez-les dans les <strong>fichiers</strong> du projet. Pas de fichier ? On saute l'étape.</p>
+      </div>
+      <div class="stepcard">
+        <h3>Déplacer votre conversation dans le projet</h3>
+        <p>Retournez sur la conversation de départ. À côté de son nom, cliquez sur la <strong>flèche déroulante</strong>, puis <strong>« Ajouter au projet »</strong>. Elle devient le premier chat du projet — tout votre travail est rangé avec.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>Pourquoi déplacer le chat ?</b> Toute la réflexion qui a mené au résultat est dedans. En la rangeant, vous gardez la mémoire de comment vous y êtes arrivée — et vos prochaines conversations du projet repartent de là.
+    </div>
+
+    <!-- Cas concret -->
+    <div class="card accent" style="margin-top:22px">
+      <h3>Deux besoins réels, deux bons réflexes</h3>
+      <p class="muted">Le meilleur moyen de retenir : le voir sur vos vraies tâches. L'une appelle un projet, l'autre une compétence.</p>
+    </div>
+
+    <div class="card accent">
+      <h3>Cas A — « Je veux n'avoir qu'à répondre à mes mails » → un PROJET</h3>
+      <p>Vous traitez les mêmes types de mails toute la semaine. Vous voulez coller le mail reçu et obtenir une réponse à votre ton, avec vos garde-fous. C'est un <strong>sujet récurrent qui a ses documents</strong> → un projet.</p>
+      <ul class="clean">
+        <li><strong>1 · On discute</strong> : « voilà mon ton, mes règles (ne jamais conclure à une prise en charge…) ». On teste sur deux ou trois mails.</li>
+        <li><strong>2 · On range</strong> : projet « Mes réponses mails », instructions générées par Claude, fichiers utiles (trame, exemples anonymisés, signature).</li>
+        <li><strong>3 · On déplace</strong> la conversation dans le projet. À chaque mail, vous ouvrez le projet, vous collez, la réponse sort calibrée.</li>
+      </ul>
+      <p class="muted" style="margin-top:10px"><strong>Pourquoi un projet ?</strong> Parce qu'il y a des <strong>fichiers</strong> et un contexte qui vivent ensemble. Le projet est le classeur qui garde tout ça au même endroit.</p>
+    </div>
+
+    <div class="card accent">
+      <h3>Cas B — « J'ai trouvé un bon angle pour vendre la prévoyance » → une COMPÉTENCE</h3>
+      <p>Un jour, vous tombez sur un <strong>argumentaire prévoyance</strong> qui marche : la bonne accroche, les bonnes objections. Vous voulez le ressortir à volonté, sans monter tout un classeur. C'est un <strong>savoir-faire</strong> → une compétence.</p>
+      <ul class="clean">
+        <li><strong>1 · On discute</strong> jusqu'à ce que l'argumentaire soit nickel.</li>
+        <li><strong>2 · On en fait une compétence</strong> : « Claude, génère-moi cet argumentaire prévoyance en compétence prête à enregistrer ». Il la produit, vous cliquez sur <strong>Enregistrer la compétence</strong> — rien d'autre.</li>
+        <li><strong>3 · Claude la ressort tout seul</strong> : la prochaine fois que vous travaillez un dossier prévoyance, il mobilise l'angle sans que vous recolliez quoi que ce soit.</li>
+      </ul>
+      <p class="muted" style="margin-top:10px"><strong>Pourquoi une compétence ?</strong> Parce qu'il n'y a <strong>pas de fichiers à ranger</strong> : juste une façon de faire à réutiliser. Pas besoin de classeur — et elle vous suit partout.</p>
+    </div>
+
+    <div class="note">
+      <b>Le réflexe à retenir :</b> des <b>fichiers et un sujet à garder ensemble</b> ? → projet. Juste <b>une façon de faire à réutiliser</b> ? → compétence. Et rien n'empêche d'avoir les deux le jour où l'angle prévoyance mérite son propre classeur.
+    </div>
+
+    <!-- Récap -->
+    <div class="card" style="margin-top:22px">
+      <h3>Le récap anti-confusion</h3>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Niveau</th><th>Ça sert à</th><th>Valable où</th><th>Où ça vit</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="key">Préférences</td><td>Vous présenter à Claude une fois pour toutes</td><td>Partout, tout le temps</td><td>Réglages › Profil</td></tr>
+            <tr><td class="key">Projet</td><td>Regrouper un sujet : instructions + fichiers + conversations</td><td>Dans ce projet seulement</td><td>Menu Projets (à gauche)</td></tr>
+            <tr><td class="key">Compétence</td><td>Un savoir-faire que Claude ressort au bon moment</td><td>Quand la tâche s'y prête</td><td>Réglages › Capacités</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="clean" style="margin-top:14px">
+        <li><strong>« C'est qui, moi ? »</strong> → les <strong>préférences</strong>.</li>
+        <li><strong>« C'est quel sujet, avec quels documents ? »</strong> → un <strong>projet</strong>.</li>
+        <li><strong>« C'est quel savoir-faire à réutiliser ? »</strong> → une <strong>compétence</strong>.</li>
+      </ul>
+    </div>
+
+    <div class="note">
+      Une question, un blocage ? On en parle quand vous voulez : <b>contact@lrenov-ia.studio</b>.
+    </div>
+  </section>
+
 </main>
 
 <footer>
@@ -401,6 +613,20 @@
       }
       const o=btn.textContent;btn.textContent='Copié ✓';btn.classList.add('ok');
       setTimeout(()=>{btn.textContent=o;btn.classList.remove('ok');},1400);
+    });
+  });
+
+  // Copie des blocs prompt (onglet Construire dans Claude)
+  document.querySelectorAll('.copy-btn').forEach(btn=>{
+    btn.addEventListener('click',async()=>{
+      const pre=btn.closest('.prompt').querySelector('pre');
+      const txt=pre.innerText;
+      try{await navigator.clipboard.writeText(txt);}catch(e){
+        const r=document.createRange();r.selectNode(pre);
+        const s=window.getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy');}catch(_){}s.removeAllRanges();
+      }
+      const o=btn.textContent;btn.textContent='Copié ✓';btn.classList.add('ok');
+      setTimeout(()=>{btn.textContent=o;btn.classList.remove('ok');},1600);
     });
   });
 
