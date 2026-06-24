@@ -217,15 +217,15 @@ function seed(){
   };
 }
 let DB=seed();
-function save(){ try{ localStorage.setItem(KEY,JSON.stringify(DB)); }catch(e){} scheduleCloud(); }
+function save(){ saveLocalOnly(); scheduleMeta(); }
 function load(){ try{ const r=localStorage.getItem(KEY); if(r) DB=JSON.parse(r); }catch(e){} }
 
 // ============ Helpers ============
 const $=s=>document.querySelector(s);
 const uid=p=>p+'-'+Math.random().toString(36).slice(2,7);
 const esc=s=>(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const num=v=>{const n=parseInt(v,10);return isNaN(n)?0:n;};
-function money(n){ return (n||0).toLocaleString('fr-FR')+' €'; }
+const num=v=>{const n=parseFloat(String(v).replace(',','.'));return isNaN(n)?0:n;};
+function money(n){ n=n||0; const d=Math.round(n*100)%100!==0; return n.toLocaleString('fr-FR',{minimumFractionDigits:d?2:0,maximumFractionDigits:2})+' €'; }
 function prixSession(f,s){
   const cand=[s.prix, f.prix, DB.studio.prixDefaut];
   for(const v of cand){ if(v!==undefined && v!==null && v!=='') return num(v); }
@@ -237,14 +237,24 @@ function encaisseFormation(f){ return f.sessions.reduce((t,s)=>t+encaisseSession
 function caFormation(f){ return f.sessions.reduce((t,s)=>t+caSession(f,s),0); }
 function elevesFormation(f){ return f.sessions.reduce((t,s)=>t+num(s.inscrits),0); }
 function syncAll(){ DB.formations.forEach(f=>f.sessions.forEach(s=>{ if(Array.isArray(s.participants)){ s.inscrits=s.participants.length; s.presents=s.participants.filter(p=>p.present).length; } })); }
-function mkP(nom,montant,facture,tag){ return {id:uid('p'),nom:nom,present:false,paye:false,montant:montant,facture:facture||'',lien:'',tag:tag||''}; }
+function mkP(nom,montant,facture,tag){ return {id:uid('p'),nom:nom,present:false,paye:false,montant:montant,facture:facture||'',lien:'',tag:tag||'',email:'',tel:'',adresse:'',updatedAt:nowISO()}; }
 function rosterG1(){ return [mkP('Marion Moreau',275,'F-2026-05-24'),mkP('Laëtitia Fuzeau',275,'F-2026-05-19'),mkP('Florence Bouchet',275,'F-2026-05-22'),mkP('Déborah Praud',275,'F-2026-05-18')]; }
 function rosterG2(){ return [mkP('Elodie Brossard',275,'F-2026-05-25'),mkP('Rémi Lenglet',275,''),mkP('Alain Ayrault',275,'F-2026-05-17'),mkP('Emmanuelle Sarraf',275,''),mkP('Virginie Furet-Bouchaud',275,'F-2026-05-21'),mkP('Frantz Ardon',275,'F-2026-05-20'),mkP('Carole Aubre',0,'','offerte')]; }
 function migrate(){ let ch=false; const f=getF('mdp'); if(!f) return false;
   const g1=getS(f,'mdp-g1'); if(g1&&!Array.isArray(g1.participants)){ g1.participants=rosterG1(); ch=true; }
   const g2=getS(f,'mdp-g2'); if(g2&&!Array.isArray(g2.participants)){ g2.participants=rosterG2(); ch=true; }
   if(g1&&!g1.support){ g1.support='support_apprenant_IA_MutuelleDePoitiers_15juin2026.html'; ch=true; }
+  if(g2&&(!g2.support||g2.support==='support_apprenant_IA_MutuelleDePoitiers_15juin2026.html')){ g2.support='support_apprenant_IA_MutuelleDePoitiers_25juin2026.html'; ch=true; }
+  if(g2&&!g2.cockpit){ g2.cockpit='cockpit_formateur_IA_MutuelleDePoitiers_Groupe2_25juin2026.html'; ch=true; }
   if(DB.studio&&!DB.studio.prenom){ DB.studio.prenom='Laurence'; ch=true; }
+  DB.formations.forEach(ff=>ff.sessions.forEach(ss=>{ if(Array.isArray(ss.participants)) ss.participants.forEach(p=>{
+    if(!p.id){ p.id=uid('p'); ch=true; }
+    if(!p.updatedAt){ p.updatedAt=nowISO(); ch=true; }
+    if(p.email===undefined){ p.email=''; }
+    if(p.tel===undefined){ p.tel=''; }
+    if(p.adresse===undefined){ p.adresse=''; }
+    if(p.nom==='Johann'||p.nom==='Johan'){ p.nom='Yoann'; p.updatedAt=nowISO(); ch=true; }
+  }); }));
   return ch; }
 function getF(fid){ return DB.formations.find(f=>f.id===fid); }
 function getS(f,sid){ return f? f.sessions.find(s=>s.id===sid):null; }
@@ -361,7 +371,8 @@ function renderJourJ(){
   const cards=[];
   DB.formations.forEach(f=>f.sessions.forEach(s=>{
     const label=encodeURIComponent(f.client+' — '+s.label);
-    const cockpitUrl='cockpit_formateur_IA_MutuelleDePoitiers.html?session='+encodeURIComponent(s.id)+'&label='+label;
+    const cockpitFile=(s.cockpit||'').trim()||'cockpit_formateur_IA_MutuelleDePoitiers.html';
+    const cockpitUrl=cockpitFile+'?session='+encodeURIComponent(s.id)+'&label='+label;
     const sup=(s.support||'').trim();
     const supBtn= sup
       ? `<a class="btn primary" href="${esc(sup)}" target="_blank" rel="noopener">Support apprenant</a>`
@@ -378,6 +389,10 @@ function renderJourJ(){
         </div>
       </div>
       <div style="margin-top:12px">
+        <label class="fl">Fichier cockpit formateur (nom du fichier hébergé à côté de la console)</label>
+        <input class="fi" data-cockpit="${s.id}" value="${esc((s.cockpit||'').trim())}" placeholder="cockpit_formateur_....html">
+      </div>
+      <div style="margin-top:10px">
         <label class="fl">Fichier support apprenant (nom du fichier hébergé à côté de la console)</label>
         <input class="fi" data-support="${s.id}" value="${esc(sup)}" placeholder="support_apprenant_....html">
       </div>
@@ -529,7 +544,7 @@ function renderSession(fid,sid,tab){
       const mv=others.map(o=>`<button class="btn sm" data-pmv="${p.id}" data-pmvto="${o.id}">→ ${esc(o.label)}</button>`).join('');
       const open=p.lien?`<a class="btn sm" href="${esc(p.lien)}" target="_blank" rel="noopener">Ouvrir</a>`:'';
       return `<tr>
-        <td><b>${esc(p.nom)}</b>${p.tag?` <span class="ptag">${esc(p.tag)}</span>`:''}</td>
+        <td><input class="fi mini" style="min-width:140px" type="text" data-p="nom" data-pid="${p.id}" value="${esc(p.nom||'')}">${p.tag?` <span class="ptag">${esc(p.tag)}</span>`:''}</td>
         <td><button class="tog ${p.present?'on':''}" data-ptoggle="present" data-pid="${p.id}">${p.present?'Présent':'—'}</button></td>
         <td><button class="tog pay ${p.paye?'on':''}" data-ptoggle="paye" data-pid="${p.id}">${p.paye?'Payé':'À régler'}</button></td>
         <td><input class="fi mini" type="number" data-p="montant" data-pid="${p.id}" value="${num(p.montant)}"></td>
@@ -563,7 +578,7 @@ function renderSession(fid,sid,tab){
       <div class="card"><h3>Pièces de la session</h3><ul class="doclist">${items}</ul></div>`;
   } else { // animer
     const label=encodeURIComponent(esc(f.client)+' — '+esc(s.label));
-    const url='cockpit_formateur_IA_MutuelleDePoitiers.html?session='+encodeURIComponent(s.id)+'&label='+label;
+    const url=((s.cockpit||'').trim()||'cockpit_formateur_IA_MutuelleDePoitiers.html')+'?session='+encodeURIComponent(s.id)+'&label='+label;
     body=`<div class="card">
       <h3>Animer la session — jour J</h3>
       <p class="sub" style="margin:0 0 14px">Ouvre ton cockpit (chrono, déroulé, antidotes, notes, checklists). Il s'enregistre tout seul, scopé à <b>cette</b> session.</p>
@@ -587,9 +602,9 @@ function selectHTML(id,opts,val){
 function curIds(){ const p=(location.hash||'').replace(/^#\//,'').split('/'); return {fid:p[1],sid:p[2]}; }
 
 document.addEventListener('click',e=>{
-  if(e.target.id==='cloudSave'){ readCloudFields(); saveCfg(); cloudStatus('Connecté. Envoi auto actif.','ok'); cloudPush(); return; }
-  if(e.target.id==='cloudPushNow'){ readCloudFields(); saveCfg(); cloudPush(); return; }
-  if(e.target.id==='cloudPull'){ readCloudFields(); saveCfg(); cloudPull(); return; }
+  if(e.target.id==='cloudSave'){ readCloudFields(); saveCfg(); cloudStatus('Connecté. Synchro ligne par ligne active.','ok'); pullAll(true); return; }
+  if(e.target.id==='cloudPushNow'){ readCloudFields(); saveCfg(); pushMeta(); pushAllRows(); cloudStatus('Envoi de toutes les lignes…'); return; }
+  if(e.target.id==='cloudPull'){ readCloudFields(); saveCfg(); pullAll(true); return; }
   const go=e.target.closest('[data-go]'); if(go){ location.hash=go.dataset.go; return; }
   if(e.target.id==='addF'){
     const name=prompt('Nom du client / réseau ?'); if(!name) return;
@@ -605,27 +620,29 @@ document.addEventListener('click',e=>{
     if(confirm('Supprimer cette session ?')){ f.sessions=f.sessions.filter(s=>s.id!==del.dataset.del); save(); route(); } return; }
   const ptg=e.target.closest('[data-ptoggle]'); if(ptg){ const {fid,sid}=curIds(); const f=getF(fid); const s=getS(f,sid);
     const p=s&&s.participants&&s.participants.find(x=>x.id===ptg.dataset.pid);
-    if(p){ const k=ptg.dataset.ptoggle; p[k]=!p[k]; syncAll(); save(); route(); } return; }
+    if(p){ const k=ptg.dataset.ptoggle; p[k]=!p[k]; p.updatedAt=nowISO(); syncAll(); saveLocalOnly(); route(); pushRow(fid,sid,p); } return; }
   const padd=e.target.closest('[data-padd]'); if(padd){ const {fid,sid}=curIds(); const f=getF(fid); const s=getS(f,sid);
     if(s){ const nom=prompt('Nom du participant ?'); if(nom){ s.participants=s.participants||[];
-      s.participants.push({id:uid('p'),nom:nom,present:false,paye:false,montant:num(f.prix||DB.studio.prixDefaut),facture:'',lien:'',tag:''}); syncAll(); save(); route(); } } return; }
+      const p={id:uid('p'),nom:nom,present:false,paye:false,montant:num(f.prix||DB.studio.prixDefaut),facture:'',lien:'',tag:'',email:'',tel:'',adresse:'',updatedAt:nowISO()};
+      s.participants.push(p); syncAll(); saveLocalOnly(); route(); pushRow(fid,sid,p); } } return; }
   const pmv=e.target.closest('[data-pmv]'); if(pmv){ const {fid,sid}=curIds(); const f=getF(fid); const s=getS(f,sid); const to=getS(f,pmv.dataset.pmvto);
     if(s&&to&&s.participants){ const i=s.participants.findIndex(x=>x.id===pmv.dataset.pmv);
-      if(i>=0){ const moved=s.participants.splice(i,1)[0]; to.participants=to.participants||[]; to.participants.push(moved); syncAll(); save(); route(); } } return; }
+      if(i>=0){ const moved=s.participants.splice(i,1)[0]; moved.updatedAt=nowISO(); to.participants=to.participants||[]; to.participants.push(moved); syncAll(); saveLocalOnly(); route(); pushRow(fid,to.id,moved); } } return; }
   const pdel=e.target.closest('[data-pdel]'); if(pdel){ const {fid,sid}=curIds(); const f=getF(fid); const s=getS(f,sid);
     if(s&&s.participants){ const p=s.participants.find(x=>x.id===pdel.dataset.pdel);
-      if(p&&confirm('Retirer '+((p&&p.nom)||'ce participant')+' de la liste ?')){ s.participants=s.participants.filter(x=>x.id!==pdel.dataset.pdel); syncAll(); save(); route(); } } return; }
+      if(p&&confirm('Retirer '+((p&&p.nom)||'ce participant')+' de la liste ?')){ const id=p.id; s.participants=s.participants.filter(x=>x.id!==id); syncAll(); saveLocalOnly(); route(); deleteRow(id); } } return; }
   const sub=e.target.closest('[data-sub]'); if(sub){ const {fid,sid}=curIds(); location.hash='#/session/'+fid+'/'+sid+'/'+sub.dataset.sub; return; }
 });
 
 // changements de champs (blur/change : pas de perte de focus)
 document.addEventListener('change',e=>{
   const t=e.target; const {fid,sid}=curIds(); const f=getF(fid);
+  if(t.dataset.cockpit){ DB.formations.forEach(ff=>ff.sessions.forEach(ss=>{ if(ss.id===t.dataset.cockpit) ss.cockpit=t.value.trim(); })); save(); return; }
   if(t.dataset.support){ DB.formations.forEach(ff=>ff.sessions.forEach(ss=>{ if(ss.id===t.dataset.support) ss.support=t.value.trim(); })); save(); return; }
   if(t.dataset.st){ DB.studio[t.dataset.st]=t.value; save(); if(t.dataset.st==='nda') $('#ndaTag').textContent='NDA '+(DB.studio.nda||''); return; }
   if(t.dataset.f && f){ f[t.dataset.f]=t.type==='number'?num(t.value):t.value; save(); if(t.dataset.f==='client'||t.dataset.f==='prix'){} return; }
   if(t.dataset.p && f){ const s=getS(f,sid); if(s&&s.participants){ const p=s.participants.find(x=>x.id===t.dataset.pid);
-    if(p){ p[t.dataset.p]= t.type==='number'?num(t.value):t.value; syncAll(); save(); route(); } } return; }
+    if(p){ p[t.dataset.p]= t.type==='number'?num(t.value):t.value; p.updatedAt=nowISO(); syncAll(); saveLocalOnly(); route(); pushRow(fid,sid,p); } } return; }
   if(t.dataset.s && f){ const s=getS(f,sid); if(s){ s[t.dataset.s]=t.type==='number'?num(t.value):t.value; save(); if(t.dataset.s==='inscrits'||t.dataset.s==='prix'){ route(); } } return; }
   if(t.dataset.sel && f){
     const id=t.dataset.sel, v=t.value;
@@ -682,79 +699,131 @@ function readCloudFields(){
 }
 function saveLocalOnly(){ try{ localStorage.setItem(KEY,JSON.stringify(DB)); }catch(e){} }
 
-// JSONP GET générique — le POST est aveugle (no-cors) ; le GET, lui, a une vraie réponse
-function cloudGet(onResp,onErr){
+// ===== Synchro A : le Google Sheet est MAÎTRE pour les participants =====
+// Édition ligne par ligne, "dernière modif gagne" (par updatedAt). Plus aucun envoi en bloc.
+function nowISO(){ return new Date().toISOString(); }
+function hhmm(){ return new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); }
+let metaTimer=null;
+
+// JSONP GET générique (le POST no-cors est aveugle ; le GET a une vraie réponse)
+function apiGet(params, onResp, onErr){
   if(!cloudCfg.url){ onErr&&onErr('nourl'); return; }
   const cb='__ccb_'+Date.now()+'_'+Math.floor(Math.random()*1e4);
   const tag=document.createElement('script'); let done=false;
   function cleanup(){ try{ delete window[cb]; }catch(e){ window[cb]=undefined; } if(tag.parentNode) tag.parentNode.removeChild(tag); }
   window[cb]=function(resp){ done=true; try{ onResp&&onResp(resp); } finally{ cleanup(); } };
   tag.onerror=function(){ if(!done){ onErr&&onErr('net'); cleanup(); } };
-  tag.src=cloudCfg.url+'?action=get&session='+encodeURIComponent(cloudCfg.name||'console-lrenov')+'&token='+encodeURIComponent(cloudCfg.token||'')+'&callback='+cb+'&t='+Date.now();
+  let qs=Object.keys(params).map(k=>encodeURIComponent(k)+'='+encodeURIComponent(params[k]==null?'':params[k])).join('&');
+  tag.src=cloudCfg.url+'?'+qs+'&token='+encodeURIComponent(cloudCfg.token||'')+'&callback='+cb+'&t='+Date.now();
   document.head.appendChild(tag);
   setTimeout(()=>{ if(!done){ onErr&&onErr('timeout'); cleanup(); } },12000);
 }
 
-function scheduleCloud(){ if(!cloudCfg.url) return; if(cloudTimer) clearTimeout(cloudTimer); cloudTimer=setTimeout(cloudPush,2200); }
+function findP(id){
+  for(const f of DB.formations) for(const s of (f.sessions||[])){ if(s.participants){ const p=s.participants.find(x=>x.id===id); if(p) return {p,f,s}; } }
+  return null;
+}
 
-function cloudPush(){
+// Pousse UNE ligne (upsert). applied===false => le Sheet était plus récent : on adopte sa version.
+function pushRow(fid,sid,p){
   if(!cloudCfg.url) return;
-  if(typeof fetch!=='function'){ cloudStatus('Envoi indispo sur ce navigateur — utilise Exporter.','warn'); return; }
-  const at=new Date().toISOString();
-  const payload={token:cloudCfg.token, session:cloudCfg.name||'console-lrenov', savedAt:at, data:DB};
+  if(!p.updatedAt) p.updatedAt=nowISO();
+  const f=getF(fid), s=getS(f,sid);
   cloudStatus('Envoi…');
-  fetch(cloudCfg.url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
-    .then(()=>{ setTimeout(()=>cloudVerify(at),1400); })
-    .catch(()=>cloudStatus('Hors-ligne — enregistré en local, nouvel essai à la prochaine modif.','warn'));
+  apiGet({action:'upsert', id:p.id, formationId:fid, sessionId:sid,
+    formation:(f&&f.client)||'', groupe:(s&&s.label)||'', date:(s&&s.date)||'',
+    nom:p.nom||'', present:p.present?'oui':'', paye:p.paye?'oui':'',
+    montant:(p.montant==null?'':p.montant), facture:p.facture||'', email:p.email||'',
+    tel:p.tel||'', adresse:p.adresse||'', lien:p.lien||'', tag:p.tag||'', updatedAt:p.updatedAt},
+   function(resp){
+     if(resp&&resp.ok&&resp.applied===false&&resp.row){ adoptRow(resp.row); saveLocalOnly(); route(); cloudStatus('Le Sheet était plus récent — sa version est gardée.','ok'); }
+     else if(resp&&resp.ok){ cloudStatus('Synchronisé ✓ '+hhmm(),'ok'); }
+     else { cloudStatus('Refusé : '+((resp&&resp.error)||'?')+(resp&&resp.error==='token'?' (jeton ≠ script).':''),'warn'); }
+   }, function(){ cloudStatus('Hors-ligne — enregistré en local, repart à la prochaine synchro.','warn'); });
+}
+function deleteRow(id){ if(!cloudCfg.url) return; apiGet({action:'del', id:id},
+  function(){ cloudStatus('Synchronisé ✓ '+hhmm(),'ok'); },
+  function(){ cloudStatus('Hors-ligne — suppression locale, repart à la synchro.','warn'); }); }
+
+// Applique une ligne (objet) venue du Sheet ; déplace si la session a changé.
+function adoptRow(row){
+  if(!row||!row.id) return;
+  const cur=findP(row.id);
+  function fill(p){ p.nom=row.nom||''; p.present=!!row.present; p.paye=!!row.paye; p.montant=Number(row.montant)||0; p.facture=row.facture||''; p.email=row.email||''; p.tel=row.tel||''; p.adresse=row.adresse||''; p.lien=row.lien||''; p.tag=row.tag||''; p.updatedAt=row.updatedAt||nowISO(); }
+  const tf=getF(row.formationId), ts=tf&&getS(tf,row.sessionId);
+  if(cur){
+    if(cur.s.id!==row.sessionId && ts){ cur.s.participants=cur.s.participants.filter(x=>x.id!==row.id); const np={id:row.id}; fill(np); ts.participants=ts.participants||[]; ts.participants.push(np); }
+    else { fill(cur.p); }
+  } else if(ts){ const np={id:row.id}; fill(np); ts.participants=ts.participants||[]; ts.participants.push(np); }
 }
 
-// Confirme que l'envoi a bien été stocké (on relit le cloud)
-function cloudVerify(expectAt){
-  cloudGet(function(resp){
-    if(resp&&resp.ok&&resp.savedAt&&String(resp.savedAt)>=String(expectAt)){
-      setSavedAt(resp.savedAt);
-      cloudStatus('Synchronisé ✓ '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+' — « '+cloudCfg.name+' »','ok');
-    } else if(resp&&resp.ok===false){
-      cloudStatus('Refusé par le cloud : '+((resp&&resp.error)||'?')+(resp&&resp.error==='token'?' (le jeton ne correspond pas au script).':''),'warn');
-    } else {
-      cloudStatus('Envoi non confirmé — réessaie « Pousser maintenant ».','warn');
-    }
-  }, function(){ cloudStatus('Hors-ligne — local OK.','warn'); });
+// Structure (sans participants) — pilotée par l'appli, poussée via POST.
+function metaOf(){
+  return { studio:DB.studio, formations:DB.formations.map(f=>({ id:f.id, client:f.client, intitule:f.intitule, financement:f.financement, prix:f.prix, qualiopi:f.qualiopi, cadre:f.cadre,
+    sessions:(f.sessions||[]).map(s=>({ id:s.id, label:s.label, date:s.date, lieu:s.lieu, statut:s.statut, support:s.support, cockpit:s.cockpit, docs:s.docs })) })) };
 }
+function pushMeta(){
+  if(!cloudCfg.url||typeof fetch!=='function') return;
+  fetch(cloudCfg.url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify({action:'saveMeta', token:cloudCfg.token, meta:metaOf()})}).catch(()=>{});
+}
+function scheduleMeta(){ if(!cloudCfg.url) return; if(metaTimer) clearTimeout(metaTimer); metaTimer=setTimeout(pushMeta,1500); }
+function pushAllRows(){ DB.formations.forEach(f=>(f.sessions||[]).forEach(s=>(s.participants||[]).forEach(p=>pushRow(f.id,s.id,p)))); }
 
-// Rappel auto à l'ouverture : l'appareil prend la dernière version du cloud, ou y pousse la sienne
-function cloudAutoSync(){
+// LECTURE + FUSION ligne par ligne (dernière modif gagne).
+function pullAll(announce){
   if(!cloudCfg.url) return;
-  cloudStatus('Synchronisation…');
-  cloudGet(function(resp){
-    if(resp&&resp.ok&&resp.data&&resp.savedAt&&(!localSavedAt||String(resp.savedAt)>String(localSavedAt))){
-      DB=resp.data; migrate(); syncAll(); saveLocalOnly(); setSavedAt(resp.savedAt); route();
-      cloudStatus('À jour depuis le cloud ✓ ('+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+')','ok');
-    } else if(resp&&resp.ok){
-      cloudPush(); // cloud vide ou version locale au moins aussi récente -> on envoie la nôtre
-    } else {
-      cloudStatus('Cloud injoignable : '+((resp&&resp.error)||'?')+(resp&&resp.error==='token'?' (jeton ≠ script).':''),'warn');
-    }
+  if(announce) cloudStatus('Synchronisation…');
+  apiGet({action:'list'}, function(resp){
+    if(!(resp&&resp.ok)){ cloudStatus('Cloud injoignable : '+((resp&&resp.error)||'?')+(resp&&resp.error==='token'?' (jeton ≠ script).':''),'warn'); return; }
+    if(resp.meta){ try{ mergeMeta(resp.meta); }catch(e){} }
+    mergeRows(resp.rows||[]);
+    syncAll(); saveLocalOnly(); setSavedAt(resp.serverNow||nowISO()); route();
+    cloudStatus('À jour ✓ '+hhmm(),'ok');
   }, function(){ cloudStatus('Hors-ligne — la console marche en local, synchro au retour du réseau.','warn'); });
 }
 
-function cloudPull(){
-  if(!cloudCfg.url){ cloudStatus('URL du backend manquante.','warn'); return; }
-  if(!confirm('Charger la console depuis le cloud ? Ça remplace les données affichées sur CET appareil.')) return;
-  cloudGet(function(resp){
-    if(resp&&resp.ok&&resp.data){ DB=resp.data; migrate(); syncAll(); saveLocalOnly(); setSavedAt(resp.savedAt||''); route(); cloudStatus('Console restaurée depuis le cloud ✓','ok'); }
-    else if(resp&&resp.ok){ cloudStatus('Aucune sauvegarde en ligne pour ce nom.','warn'); }
-    else { cloudStatus('Erreur : '+((resp&&resp.error)||'réponse invalide'),'warn'); }
-  }, function(){ cloudStatus('Connexion impossible (vérifie l’URL / le déploiement).','warn'); });
+// Structure : ajoute/maj sans jamais supprimer ni toucher aux participants.
+function mergeMeta(meta){
+  if(!meta||!meta.formations) return;
+  if(meta.studio){ const keepPrenom=DB.studio&&DB.studio.prenom; DB.studio=Object.assign({},DB.studio,meta.studio); if(keepPrenom) DB.studio.prenom=keepPrenom; }
+  meta.formations.forEach(mf=>{
+    let f=getF(mf.id);
+    if(!f){ f={id:mf.id,client:mf.client,intitule:mf.intitule,financement:mf.financement,prix:mf.prix,qualiopi:mf.qualiopi,cadre:mf.cadre,sessions:[]}; DB.formations.push(f); }
+    else { ['client','intitule','financement','prix','qualiopi','cadre'].forEach(k=>{ if(mf[k]!==undefined) f[k]=mf[k]; }); }
+    (mf.sessions||[]).forEach(ms=>{
+      let s=getS(f,ms.id);
+      if(!s){ s={id:ms.id,label:ms.label,date:ms.date,lieu:ms.lieu,statut:ms.statut,support:ms.support,cockpit:ms.cockpit,docs:ms.docs||{},participants:[]}; f.sessions.push(s); }
+      else { ['label','date','lieu','statut','support','cockpit','docs'].forEach(k=>{ if(ms[k]!==undefined) s[k]=ms[k]; }); }
+    });
+  });
 }
+
+// Fusion des lignes par id : dernière modif gagne. Les lignes seulement-locales sont gardées + repoussées.
+function mergeRows(rows){
+  const inc={}; (rows||[]).forEach(r=>{ if(r&&r.id) inc[r.id]=r; });
+  const loc={}; DB.formations.forEach(f=>(f.sessions||[]).forEach(s=>(s.participants||[]).forEach(p=>{ loc[p.id]={p,fid:f.id,sid:s.id}; })));
+  const finals=[]; const seen={};
+  Object.keys(inc).forEach(id=>{ seen[id]=1; const r=inc[id]; const l=loc[id];
+    if(l){ if(String(r.updatedAt||'')>=String(l.p.updatedAt||'')) finals.push({data:rowData(r),fid:r.formationId,sid:r.sessionId});
+           else finals.push({data:l.p,fid:l.fid,sid:l.sid,pushUp:true}); }
+    else finals.push({data:rowData(r),fid:r.formationId,sid:r.sessionId});
+  });
+  Object.keys(loc).forEach(id=>{ if(!seen[id]){ const l=loc[id]; finals.push({data:l.p,fid:l.fid,sid:l.sid,pushUp:true}); } });
+  DB.formations.forEach(f=>(f.sessions||[]).forEach(s=>{ s.participants=[]; }));
+  finals.forEach(fin=>{ const f=getF(fin.fid), s=f&&getS(f,fin.sid); if(s) s.participants.push(normP(fin.data)); });
+  finals.forEach(fin=>{ if(fin.pushUp){ const f=getF(fin.fid), s=f&&getS(f,fin.sid); if(s){ const p=s.participants.find(x=>x.id===fin.data.id); if(p) pushRow(f.id,s.id,p); } } });
+}
+function rowData(r){ return {id:r.id,nom:r.nom||'',present:!!r.present,paye:!!r.paye,montant:Number(r.montant)||0,facture:r.facture||'',email:r.email||'',tel:r.tel||'',adresse:r.adresse||'',lien:r.lien||'',tag:r.tag||'',updatedAt:r.updatedAt||''}; }
+function normP(d){ return {id:d.id,nom:d.nom||'',present:!!d.present,paye:!!d.paye,montant:Number(d.montant)||0,facture:d.facture||'',email:d.email||'',tel:d.tel||'',adresse:d.adresse||'',lien:d.lien||'',tag:d.tag||'',updatedAt:d.updatedAt||nowISO()}; }
 
 // ============ Init ============
 loadCfg();
 load();
-const __mig=migrate(); syncAll(); if(__mig) saveLocalOnly();
+const __mig=migrate(); syncAll(); saveLocalOnly();
 $('#ndaTag').textContent='NDA '+(DB.studio.nda||'');
 route();
-cloudAutoSync();
+pullAll(true);
 </script>
 <script>
 if('serviceWorker' in navigator){

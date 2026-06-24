@@ -1,0 +1,307 @@
+{
+  "app": "console_formations",
+  "version": 1,
+  "exportedAt": "2026-06-19T14:54:00.984Z",
+  "data": {
+    "studio": {
+      "nom": "L'Rénov IA Studio",
+      "prenom": "Laurence",
+      "nda": "75331795533",
+      "siret": "",
+      "adresse": "",
+      "contact": "contact@lrenov-ia.studio",
+      "prixDefaut": 275
+    },
+    "formations": [
+      {
+        "id": "mdp",
+        "client": "Mutuelle de Poitiers Assurances",
+        "intitule": "Quelle IA pour quoi faire ?",
+        "financement": "direct",
+        "prix": 275,
+        "sessions": [
+          {
+            "id": "mdp-g1",
+            "label": "Groupe 1",
+            "date": "2026-06-15",
+            "lieu": "Saintes",
+            "inscrits": 3,
+            "presents": 3,
+            "statut": "réalisée",
+            "docs": {},
+            "support": "support_apprenant_IA_MutuelleDePoitiers_15juin2026.html",
+            "participants": [
+              {
+                "id": "p_1",
+                "nom": "Marion Moreau",
+                "present": true,
+                "paye": false,
+                "montant": 275,
+                "facture": "F-2026-05-24",
+                "lien": "",
+                "tag": "",
+                "email": "",
+                "tel": "",
+                "adresse": "",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              },
+              {
+                "id": "p_2",
+                "nom": "Florence Bouchet",
+                "present": true,
+                "paye": false,
+                "montant": 275,
+                "facture": "F-2026-05-22",
+                "lien": "",
+                "tag": "",
+                "email": "",
+                "tel": "",
+                "adresse": "",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              },
+              {
+                "id": "p_3",
+                "nom": "Carole Aubre",
+                "present": true,
+                "paye": false,
+                "montant": 0,
+                "facture": "",
+                "lien": "",
+                "tag": "offerte",
+                "email": "",
+                "tel": "",
+                "adresse": "",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              }
+            ]
+          },
+          {
+            "id": "mdp-g2",
+            "label": "Groupe 2",
+            "date": "2026-06-25",
+            "lieu": "Saintes",
+            "inscrits": 9,
+            "presents": 0,
+            "statut": "à venir",
+            "docs": {},
+            "support": "",
+            "participants": [
+              {
+                "id": "p_4",
+                "nom": "Elodie Brossard",
+                "present": false,
+                "paye": false,
+                "montant": 275,
+                "facture": "F-2026-05-25",
+                "lien": "",
+                "tag": "",
+                "email": "",
+                "tel": "",
+                "adresse": "",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              },
+              {
+                "id": "p_5",
+                "nom": "Rémi Lenglet",
+                "present": false,
+                "paye": false,
+                "montant": 275,
+                "facture": "",
+                "lien": "",
+                "tag": "",
+                "email": "",
+                "tel": "",
+                "adresse": "",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              },
+              {
+                "id": "p_6",
+                "nom": "Alain Ayrault",
+                "present": false,
+                "paye": false,
+                "montant": 275,
+                "facture": "F-2026-05-17",
+                "lien": "",
+                "tag": "",
+                "email": "",
+                "tel": "",
+                "adresse": "",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              },
+              {
+                "id": "p_7",
+                "nom": "Emmanuelle Sarraf",
+                "present": false,
+                "paye": false,
+                "montant": 275,
+                "facture": "",
+                "lien": "",
+                "tag": "",
+                "email": "",
+                "tel": "",
+                "adresse": "",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              },
+              {
+                "id": "p_8",
+                "nom": "Virginie Furet-Bouchaud",
+                "present": false,
+                "paye": false,
+                "montant": 275,
+                "facture": "F-2026-05-21",
+                "lien": "",
+                "tag": "",
+                "email": "",
+                "tel": "",
+                "adresse": "",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              },
+              {
+                "id": "p_9",
+                "nom": "Frantz Ardon",
+                "present": false,
+                "paye": false,
+                "montant": 275,
+                "facture": "F-2026-05-20",
+                "lien": "",
+                "tag": "",
+                "email": "",
+                "tel": "",
+                "adresse": "",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              },
+              {
+                "id": "p_10",
+                "nom": "Déborah Praud",
+                "present": false,
+                "paye": false,
+                "montant": 275,
+                "facture": "F-2026-05-18",
+                "lien": "",
+                "tag": "",
+                "email": "",
+                "tel": "",
+                "adresse": "",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              },
+              {
+                "id": "p_11",
+                "nom": "Laëtitia Fuzeau",
+                "present": false,
+                "paye": false,
+                "montant": 275,
+                "facture": "F-2026-05-19",
+                "lien": "",
+                "tag": "",
+                "email": "",
+                "tel": "",
+                "adresse": "",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              },
+              {
+                "id": "p_12",
+                "nom": "Yoann",
+                "present": false,
+                "paye": false,
+                "montant": 275,
+                "facture": "",
+                "lien": "",
+                "tag": "à facturer",
+                "email": "",
+                "tel": "",
+                "adresse": "",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cpf",
+        "client": "CPF",
+        "intitule": "Formation IA (financement CPF)",
+        "financement": "CPF",
+        "prix": 862.5,
+        "sessions": [
+          {
+            "id": "cpf-s1",
+            "label": "Session à planifier",
+            "date": "",
+            "lieu": "",
+            "inscrits": 4,
+            "presents": 0,
+            "statut": "à venir",
+            "docs": {},
+            "support": "",
+            "participants": [
+              {
+                "id": "p_13",
+                "nom": "Barbara Duquenne",
+                "present": false,
+                "paye": false,
+                "montant": 862.5,
+                "facture": "",
+                "lien": "",
+                "tag": "",
+                "email": "",
+                "tel": "",
+                "adresse": "",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              },
+              {
+                "id": "p_14",
+                "nom": "Maël Prud'homme",
+                "present": false,
+                "paye": false,
+                "montant": 862.5,
+                "facture": "",
+                "lien": "",
+                "tag": "",
+                "email": "maelprudhomme689@gmail.com",
+                "tel": "0673412798",
+                "adresse": "",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              },
+              {
+                "id": "p_15",
+                "nom": "Akue Adouayi",
+                "present": false,
+                "paye": false,
+                "montant": 862.5,
+                "facture": "",
+                "lien": "",
+                "tag": "",
+                "email": "adouayi@gmail.com",
+                "tel": "0675381966",
+                "adresse": "6 rue Ruz André Rouault, 35200 Rennes",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              },
+              {
+                "id": "p_16",
+                "nom": "Cyril Blanchard",
+                "present": false,
+                "paye": false,
+                "montant": 862.5,
+                "facture": "",
+                "lien": "",
+                "tag": "",
+                "email": "",
+                "tel": "",
+                "adresse": "",
+                "updatedAt": "2026-06-19T12:00:00.000Z"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "areas",
+        "client": "Aréas",
+        "intitule": "",
+        "financement": "direct",
+        "prix": 0,
+        "sessions": []
+      }
+    ]
+  }
+}
