@@ -778,7 +778,9 @@ function pullAll(announce){
     if(!(resp&&resp.ok)){ cloudStatus('Cloud injoignable : '+((resp&&resp.error)||'?')+(resp&&resp.error==='token'?' (jeton ≠ script).':''),'warn'); return; }
     if(resp.meta){ try{ mergeMeta(resp.meta); }catch(e){} }
     mergeRows(resp.rows||[]);
+    const _mc=migrate();
     syncAll(); saveLocalOnly(); setSavedAt(resp.serverNow||nowISO()); route();
+    if(_mc) pushMeta();
     cloudStatus('À jour ✓ '+hhmm(),'ok');
   }, function(){ cloudStatus('Hors-ligne — la console marche en local, synchro au retour du réseau.','warn'); });
 }
@@ -794,7 +796,7 @@ function mergeMeta(meta){
     (mf.sessions||[]).forEach(ms=>{
       let s=getS(f,ms.id);
       if(!s){ s={id:ms.id,label:ms.label,date:ms.date,lieu:ms.lieu,statut:ms.statut,support:ms.support,cockpit:ms.cockpit,docs:ms.docs||{},participants:[]}; f.sessions.push(s); }
-      else { ['label','date','lieu','statut','support','cockpit','docs'].forEach(k=>{ if(ms[k]!==undefined) s[k]=ms[k]; }); }
+      else { ['label','date','lieu','statut','support','cockpit','docs'].forEach(k=>{ if(ms[k]!==undefined && ms[k]!=='') s[k]=ms[k]; }); }
     });
   });
 }
@@ -820,7 +822,7 @@ function normP(d){ return {id:d.id,nom:d.nom||'',present:!!d.present,paye:!!d.pa
 // ============ Init ============
 loadCfg();
 load();
-const __mig=migrate(); syncAll(); saveLocalOnly();
+const __mig=migrate(); syncAll(); saveLocalOnly(); if(__mig) scheduleMeta();
 $('#ndaTag').textContent='NDA '+(DB.studio.nda||'');
 route();
 pullAll(true);
